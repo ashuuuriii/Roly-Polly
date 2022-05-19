@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'RolyPolly.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'rolypolly',
+        'USER': env.str('DBUSER'),
+        'PASSWORD': env.str('DBPW'),
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
