@@ -2,6 +2,16 @@ from django.test import SimpleTestCase
 from django.urls import reverse
 
 
+class FaviconTests(SimpleTestCase):
+    def test_get_requests(self):
+        response = self.client.get("/favicon.ico")
+        print(response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Cache-Control"], "max-age=86400, immutable, public")
+        self.assertEqual(response["Content-Type"], "image/vnd.microsoft.icon")
+        self.assertGreaterEqual(len(response.getvalue()), 0)
+
+
 class HomePageTests(SimpleTestCase):
     def test_url_exists_at_correct_location(self):
         response = self.client.get("/")
