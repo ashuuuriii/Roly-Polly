@@ -162,3 +162,7 @@ ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 # TODO: redirect to create polls page
 LOGIN_REDIRECT_URL = "home"  
 ACCOUNT_LOGOUT_REDIRECT_URL = "home"
+
+# Celery settings
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_URL = "redis://127.0.0.1:6379/0"
