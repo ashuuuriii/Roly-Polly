@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     # local apps
     "pages.apps.PagesConfig",
-    "accounts.apps.AccountsConfig"
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
@@ -159,10 +159,17 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
+# Override AllAuth's default account adapter
+ACCOUNT_ADAPTER = "accounts.adapter.CustomAccountAdapter"
+
 # TODO: redirect to create polls page
-LOGIN_REDIRECT_URL = "home"  
+LOGIN_REDIRECT_URL = "home"
 ACCOUNT_LOGOUT_REDIRECT_URL = "home"
 
 # Celery settings
 CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
 CELERY_RESULT_URL = "redis://127.0.0.1:6379/0"
+# need to set serializer to pickle to support Django Email types.
+# https://docs.celeryq.dev/en/latest/userguide/calling.html#calling-serializers
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_ACCEPT_CONTENT = ["pickle"]
