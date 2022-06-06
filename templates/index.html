@@ -4,4 +4,9 @@
 
 {% block content %}
 <h1>Home</h1>
+{% if user.is_authenticated %}
+<a href="#"><button type="button">Create An Event</button></a>
+{% else %}
+<a href="{% url 'account_signup' %}"><button type="button">Sign Me Up</button></a>
+{% endif %}
 {% endblock %}

@@ -13,8 +13,14 @@
 		<div class="nav-bar">
       <div class="site-name-main"><a href="{% url 'home' %}">Roly-Polly</a></div>
       <ul>
-        <a href="{% url 'about' %}"><li>About</li></a>
-        <a href="{% url 'faq' %}"><li>FAQ</li></a>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'faq' %}">FAQ</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="#"></li>My Dashboard</a></li>
+          <li><a href="{% url 'account_logout' %}"></li>Logout</a></li>
+        {% else %}
+          <li><a href="{% url 'account_login' %}">Log In</a></li>
+        {% endif %}
       </ul>
     </div>
 		{% block content %}{% endblock content%}
