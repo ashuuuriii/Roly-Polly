@@ -4,5 +4,5 @@ from .views import NewEventFormView
 
 
 urlpatterns = [
-    path('create_new', NewEventFormView.as_view(), name='create_event'),
+    path("create_new", NewEventFormView.as_view(), name="create_event"),
 ]
