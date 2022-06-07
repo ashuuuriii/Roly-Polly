@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic.edit import FormView
+from .forms import NewEventForm
 
-# Create your views here.
+
+class NewEventFormView(FormView):
+    template_name = 'new_event.html'
+    form_class = NewEventForm
+    # success_url = '/saved/'yy
