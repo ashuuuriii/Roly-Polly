@@ -8,16 +8,17 @@
 		<meta name="description" content="Roly-Polly, an events management app.">
 		<title>{% block title %}{% endblock title%}</title>
 		<link rel="stylesheet" href="{% static 'reset.css' %}">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
   </head>
   <body>
 		<div class="nav-bar">
       <div class="site-name-main"><a href="{% url 'home' %}">Roly-Polly</a></div>
-      <ul>
+      <ul class="nav-bar-links">
         <li><a href="{% url 'about' %}">About</a></li>
         <li><a href="{% url 'faq' %}">FAQ</a></li>
         {% if user.is_authenticated %}
-          <li><a href="#"></li>My Dashboard</a></li>
-          <li><a href="{% url 'account_logout' %}"></li>Logout</a></li>
+          <li><a href="#">My Dashboard</a></li>
+          <li><a href="{% url 'account_logout' %}">Logout</a></li>
         {% else %}
           <li><a href="{% url 'account_login' %}">Log In</a></li>
         {% endif %}
