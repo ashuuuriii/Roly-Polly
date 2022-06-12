@@ -160,6 +160,7 @@ ACCOUNT_SESSION_REMEMBER = None
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+ACCOUNT_SIGNUP_FORM_CLASS = "accounts.forms.CustomUserCreationForm"
 
 # Override AllAuth's default account adapter
 ACCOUNT_ADAPTER = "accounts.adapter.CustomAccountAdapter"
