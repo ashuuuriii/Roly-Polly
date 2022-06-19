@@ -4,8 +4,8 @@ from .models import CustomUser
 
 
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=32, label="First Name")
-    last_name = forms.CharField(max_length=32, label="Last Name")
+    first_name = forms.CharField(max_length=32, label="First Name", required=False)
+    last_name = forms.CharField(max_length=32, label="Last Name", required=False)
 
     class Meta:
         model = CustomUser

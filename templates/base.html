@@ -9,6 +9,7 @@
 		<title>{% block title %}{% endblock title%}</title>
 		<link rel="stylesheet" href="{% static 'reset.css' %}">
     <link rel="stylesheet" href="{% static 'base.css' %}">
+    {% block static_files %}{% endblock %}
   </head>
   <body>
 		<div class="nav-bar">
@@ -26,11 +27,5 @@
       </ul>
     </div>
 		{% block content %}{% endblock content%}
-    <div class="footer">
-      <ul class="footer-links">
-        <li><a href="#">Contact Us | </a></li>
-        <li><a href="#">Terms & Conditions | </a></li>
-        <li><a href="#">Privacy Policy</a></li>
-    </div>
   </body>
 </html>
