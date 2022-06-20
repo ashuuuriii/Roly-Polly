@@ -1,16 +1,21 @@
-from django import forms
+from django.forms import ModelForm, modelformset_factory, DateTimeField
+
+from .models import Event, Choice
 
 
-class NewEventForm(forms.Form):
-    event_name = forms.CharField(label="Event Name", max_length=160)
-    event_description = forms.CharField(
-        label="Event Description", widget=forms.Textarea, required=False, max_length=360
-    )
-    allow_new_answers = forms.ChoiceField(
-        label="Allow users to add new dates?",
-        choices=[(True, "Yes"), (False, "No")],
-        widget=forms.RadioSelect,
-    )
-    password = forms.BooleanField(
-        label="Set password?", widget=forms.PasswordInput, required=False
-    )
+class NewEventForm(ModelForm):
+    class Meta:
+        model = Event
+        exclude = ['user_id']
+
+
+class ChoiceForm(ModelForm):
+    # TODO: add validation to prevent users from inputting past dates
+    time_from = DateTimeField(input_formats=["%d/%m/%Y"])
+    time_to = DateTimeField(input_formats=["%d/%m/%Y"])
+
+
+# use formset factory to create dynamic fields
+ChoiceFormset = modelformset_factory(
+    Choice, form=ChoiceForm, fields=["time_from", "time_to"], extra=1
+)

@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import NewEventFormView
+from .views import new_event_view
 
 
 urlpatterns = [
-    path("create_new", NewEventFormView.as_view(), name="create_event"),
+    path("create_event", new_event_view, name="create_event"),
 ]
