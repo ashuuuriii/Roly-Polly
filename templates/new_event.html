@@ -1,11 +1,49 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Create Event{% endblock %}
+{% block title%}New Event{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'new_event.css' %}">
+{% endblock %}
 
 {% block content %}
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Create Event" />  
+  {{ event_form.as_p }}
+  <div class="time_choices">
+    {{ choice_form.management_form }}
+  <label>Event Time</label><br>
+  {% for form in choice_form %}
+    <div class="event-time-row-0">
+      {{ form.time_from }}-{{ form.time_to }}
+      <button type="button" class="del-button">-</button><br>
+    </div>
+  {% endfor %}
+   <button type="button" class="add-button">+</button>
+  </div>
+  <input type="submit" value="save" class="submit-input">
 </form>
+<script>
+  // script added here to use Django's templating language.
+  let formCount =  {{choice_form.total_form_count}};
+  const choicesBox = document.querySelector('.time_choices');
+  const addButton = document.querySelector('.add-button');
+
+  function addNewChoice(e) {
+      const newForm = `<div class="event-time-row-${formCount}">
+                       {{choice_form.empty_form.time_from|escapejs}}-{{choice_form.empty_form.time_to|escapejs}}
+                       <button type="button" class="del-button">-</button><br>
+                       </div>`.replace(/__prefix__/g, formCount);
+      addButton.insertAdjacentHTML('beforebegin', newForm);
+      console.log(formCount);
+      formCount++;
+  }
+
+  function deleteNewChoice(e) {
+      
+  }
+
+  choicesBox.querySelector('.add-button').addEventListener('click', e => addNewChoice(e));
+</script>
 {% endblock %}

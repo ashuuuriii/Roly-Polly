@@ -1,9 +1,12 @@
+from cmath import log
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from .forms import NewEventForm, ChoiceFormset
 from .models import Choice
 
 
+@login_required
 def new_event_view(request):
     template_name = "new_event.html"
     if request.method == "GET":

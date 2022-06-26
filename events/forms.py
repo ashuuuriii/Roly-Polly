@@ -6,7 +6,7 @@ from .models import Event, Choice
 class NewEventForm(ModelForm):
     class Meta:
         model = Event
-        exclude = ['user_id']
+        exclude = ["user_id"]
 
 
 class ChoiceForm(ModelForm):
@@ -17,5 +17,5 @@ class ChoiceForm(ModelForm):
 
 # use formset factory to create dynamic fields
 ChoiceFormset = modelformset_factory(
-    Choice, form=ChoiceForm, fields=["time_from", "time_to"], extra=1
+    Choice, form=ChoiceForm, fields=["time_from", "time_to"], extra=1, can_delete=True
 )
