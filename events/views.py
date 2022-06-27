@@ -20,6 +20,10 @@ def new_event_view(request):
             event.user_id = request.user
             event.save()
             for formset in choice_formset:
+                # TODO: Check if this is proper usage.
+                # ModelFormSet should remove forms marked as delete by default
+                if formset.cleaned_data.get("DELETE"):
+                    continue
                 choice = formset.save(commit=False)
                 choice.event_id = event
                 choice.save()
