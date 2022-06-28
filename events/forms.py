@@ -10,7 +10,7 @@ class NewEventForm(ModelForm):
 
 
 class ChoiceForm(ModelForm):
-    # TODO: add validation to prevent users from inputting past dates
+    # TODO: add validation to prevent users from inputting past dates or duplicates
     time_from = DateTimeField(input_formats=["%d/%m/%Y"])
     time_to = DateTimeField(input_formats=["%d/%m/%Y"])
 

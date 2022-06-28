@@ -1,6 +1,7 @@
-from cmath import log
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import NewEventForm, ChoiceFormset
 from .models import Choice
@@ -28,10 +29,19 @@ def new_event_view(request):
                 choice.event_id = event
                 choice.save()
             choice_formset.save()
-        # TODO: redirect to success page
+            return redirect('success', uuid_slug=event.access_link)
 
     return render(
         request,
         template_name,
         {"event_form": event_form, "choice_form": choice_formset},
     )
+
+
+class NewEventSuccessView(LoginRequiredMixin, TemplateView):
+    template_name = "new_event_success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['event_view_link'] = '/#'  # TODO: change this to reverse(EventDetailView)
+        return context
