@@ -13,16 +13,16 @@
   </head>
   <body>
 		<div class="nav-bar">
-      <div class="site-name-main"><a href="{% url 'home' %}">Roly-Polly</a></div>
+      <div class="site-name-main"><a href="{% url 'home' %}" class="nav-bar-text">Roly-Polly</a></div>
       <ul class="nav-bar-links">
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'about' %}">About</a></li>
-        <li><a href="{% url 'faq' %}">FAQ</a></li>
+        <li><a href="{% url 'home' %}" class="nav-bar-text">Home</a></li>
+        <li><a href="{% url 'about' %}" class="nav-bar-text">About</a></li>
+        <li><a href="{% url 'faq' %}" class="nav-bar-text">FAQ</a></li>
         {% if user.is_authenticated %}
-          <li><a href="#">My Dashboard</a></li>
-          <li><a href="{% url 'account_logout' %}">Logout</a></li>
+          <li><a href="#" class="nav-bar-text">My Dashboard</a></li>
+          <li><a href="{% url 'account_logout' %}" class="nav-bar-text">Logout</a></li>
         {% else %}
-          <li><a href="{% url 'account_login' %}">Log In</a></li>
+          <li><a href="{% url 'account_login' %}" class="nav-bar-text">Log In</a></li>
         {% endif %}
       </ul>
     </div>

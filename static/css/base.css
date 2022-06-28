@@ -16,7 +16,7 @@ body {
   height: 100%;
 }
 
-a {
+.nav-bar-text {
   color: #fff;
   text-decoration: none;
 }
@@ -47,4 +47,8 @@ a {
   display: inline-block;
   margin-left: 3%;
   margin-right: 3%;
+}
+
+.nav-bar-text:hover {
+  color: #fbdb2f;
 }
