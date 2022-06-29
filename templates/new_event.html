@@ -26,7 +26,7 @@
   <input type="submit" value="save" class="submit-input">
 </form>
 <script>
-  // script added here to use Django's templating language.
+  "use strict";
   let formCount =  {{ choice_form.total_form_count }};
   const choicesBox = document.querySelector(".time_choices");
   const formSetCounter = document.querySelector("#id_form-TOTAL_FORMS");
@@ -38,29 +38,30 @@
                        <button type="button" class="del-button" id="button-${formCount}">-</button><br>
                        </div>`.replace(/__prefix__/g, formCount);
       choicesBox
-          .querySelector(".add-button")
-          .insertAdjacentHTML("beforebegin", newForm);
+        .querySelector(".add-button")
+        .insertAdjacentHTML("beforebegin", newForm);
       choicesBox
-          .querySelector(`#button-${formCount}`)
-          .addEventListener("click", (e) => deleteNewChoice(e));
+        .querySelector(`#button-${formCount}`)
+        .addEventListener("click", (e) => deleteNewChoice(e));
       formCount++;
       formSetCounter.value++;
   }
 
   function deleteNewChoice(e) {
     const rowNumber = e.target.id.replace ( /[^\d.]/g, "" );
-    const delTargetCheckBox =
-        choicesBox.querySelector(`#id_form-${rowNumber}-DELETE`);
+    const delTargetCheckBox = choicesBox.querySelector(
+      `#id_form-${rowNumber}-DELETE`
+      );
     const delTargetDiv = choicesBox.querySelector(`#row-${rowNumber}`);
     delTargetCheckBox.checked = true;
     delTargetDiv.style.display = "none";
   }
 
   choicesBox
-      .querySelector(".add-button")
-      .addEventListener("click", (e) => addNewChoice(e));
+    .querySelector(".add-button")
+    .addEventListener("click", (e) => addNewChoice(e));
   choicesBox
-      .querySelector("#button-0")
-      .addEventListener("click", (e) => deleteNewChoice(e));
+    .querySelector("#button-0")
+    .addEventListener("click", (e) => deleteNewChoice(e));
 </script>
 {% endblock %}
