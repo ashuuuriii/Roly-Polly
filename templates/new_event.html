@@ -8,12 +8,35 @@
 {% endblock %}
 
 {% block content %}
+<h1>Create a new event</h1>
 <form method="post">
   {% csrf_token %}
-  {{ event_form.as_p }}
+  {{ event_form.non_field_errors }}
+  <p>
+    {{ event_form.event_name.errors }}
+    {{ event_form.event_name.label_tag }}<br>
+    {{ event_form.event_name }}
+  </p>
+  <p>
+    {{ event_form.event_description.errors }}
+    {{ event_form.event_description.label_tag }}<br>
+    {{ event_form.event_description }}
+  </p>
+  <p>
+    {{ event_form.password_protect.errors }}
+    {{ event_form.password.errors }}
+    <label for="{{ event_form.password_protect.id_for_label }}">Protect your event with a password?<br>
+    {{ event_form.password_protect}}Yes: {{ event_form.password }}<br>
+  </p>
+  <p>
+    {{event_form.allow_add.errors }}
+    <label for="{{ event_form.allow_add.id_for_label }}">Allow your attendees to add new event times?</label><br>
+    {{ event_form.allow_add}} Yes
+  </p>
   <div class="time_choices">
     {{ choice_form.management_form }}
   <label>Event Time</label><br>
+  <p>Start time - finish time(optional).</p>
   {% for form in choice_form %}
     <div class="event-time-row" id="row-0">
       {{ form.time_from }}-{{ form.time_to }}
@@ -21,8 +44,8 @@
       <button type="button" class="del-button" id="button-0">-</button><br>
     </div>
   {% endfor %}
-   <button type="button" class="add-button">+</button>
-  </div>
+  <button type="button" class="add-button">+</button>
+  </div>    
   <input type="submit" value="save" class="submit-input">
 </form>
 <script>

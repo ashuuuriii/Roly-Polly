@@ -1,4 +1,4 @@
-from django.forms import ModelForm, modelformset_factory, DateTimeField
+from django.forms import ModelForm, modelformset_factory, DateTimeField, PasswordInput
 
 from .models import Event, Choice
 
@@ -7,6 +7,9 @@ class NewEventForm(ModelForm):
     class Meta:
         model = Event
         exclude = ["user_id"]
+        widgets = {
+            "password": PasswordInput(),
+        }
 
 
 class ChoiceForm(ModelForm):
