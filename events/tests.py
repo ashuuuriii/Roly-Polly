@@ -10,9 +10,14 @@ from .models import Event, Choice
 class NewEventPageTests(TestCase):
     def setUp(self):
         # TODO: consider testing dynamic formset with Selenium
-        self.client.force_login(
-            get_user_model().objects.get_or_create(username="testuser")[0]
-        )
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        self.new_user = get_user_model().objects.create_user(**credentials)
+        self.client.force_login(self.new_user)
+
         self.test_event_data = {
             "event_name": "New Test Event",
             "password_protect": True,
@@ -47,6 +52,7 @@ class NewEventPageTests(TestCase):
         self.assertTrue(Event.objects.last().password_protect)
         self.assertIsNotNone(Event.objects.last().password)
         self.assertTrue(Event.objects.last().allow_add)
+        self.assertEqual(str(Event.objects.last().user_id), self.new_user.email)
 
         # test Choice model
         choice_model_obj = Choice.objects.filter(event_id=Event.objects.last().id)
