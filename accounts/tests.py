@@ -47,6 +47,14 @@ class SignupPageTests(TestCase):
 
 
 class LogInPageTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        get_user_model().objects.create_user(**credentials)
+
     def test_url_exists_at_correct_location(self):
         response = self.client.get("/accounts/login/", follow=True)
         self.assertEqual(response.status_code, 200)
@@ -57,15 +65,6 @@ class LogInPageTests(TestCase):
         self.assertTemplateUsed(response, "account/login.html")
 
     def test_login(self):
-        # TODO: change this not use use signup page
-        self.client.post(
-            reverse("account_signup"),
-            {
-                "email": "email@email.com",
-                "password1": "password123!",
-                "password2": "password123!",
-            },
-        )
         response = self.client.post(
             reverse("account_login"),
             {"login": "email@email.com", "password": "password123!"},
