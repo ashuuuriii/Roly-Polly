@@ -19,14 +19,14 @@ h1 {
   font-weight: bold;
 }
 
-p {
+.signup-description {
   text-align: left;
   font-size: 1rem;
   margin-top: 2%;
   margin-bottom: 3%;
 }
 
-p > a {
+.signup-description > a {
   color: #0091e7;
 }
 
@@ -43,6 +43,7 @@ input {
   line-height: calc(11px + 1.5vw);
   margin-bottom: 3%;
   margin-top: 1%;
+  border-style: solid;
   border-radius: 5px;
   border-color: #000;
 }

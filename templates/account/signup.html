@@ -11,25 +11,23 @@
 <div class="content">
     <div class="form-wrapper">
       <h1 class="page-title">Create your account</h1>
-      <p>
+      <p class="signup-description">
         Create an account to view and manage your events.
         If you already have an account, <a href="{% url 'account_login' %}">login here</a>.
       </p>
       <form method="post" class="form-items">
         {% csrf_token %}
-        <ul>
-          <li><label for="{{ form.first_name.id_for_label }}">First name</label></li>
-          <li>{{ form.first_name }}</li>
-          <li><label for="{{ form.last_name.id_for_label }}">Last name</label></li>
-          <li>{{ form.last_name }}</li>            
-          <li><label for="{{ form.email.id_for_label }}" class="required">E-mail</label></li>
-          <li>{{ form.email }}</li>
-          <li><label for="{{ form.password1.id_for_label }}" class="required">Password</label></li>
-          <li>{{ form.password1 }}</li>
-          <li><label for="{{ form.password2.id_for_label }}" class="required">Confirm password</label></li>
-          <li>{{ form.password2 }}</li>
-          <li><button type="submit">Create your account</button></li>
-        </ul>
+        <p><label for="{{ form.first_name.id_for_label }}">First name</label><br>
+        {{ form.first_name }}</p>
+        <p><label for="{{ form.last_name.id_for_label }}">Last name</label><br>
+        {{ form.last_name }}</p>            
+        <p><label for="{{ form.email.id_for_label }}" class="required">E-mail</label><br>
+        {{ form.email }}</p>
+        <p><label for="{{ form.password1.id_for_label }}" class="required">Password</label><br>
+        {{ form.password1 }}</p>
+        <p><label for="{{ form.password2.id_for_label }}" class="required">Confirm password</label><br>
+        {{ form.password2 }}</p>
+        <p><button type="submit">Create your account</button></p>
       </form>
   </div>
 </div>
