@@ -17,17 +17,33 @@
       </p>
       <form method="post" class="form-items">
         {% csrf_token %}
-        <p><label for="{{ form.first_name.id_for_label }}">First name</label><br>
-        {{ form.first_name }}</p>
-        <p><label for="{{ form.last_name.id_for_label }}">Last name</label><br>
-        {{ form.last_name }}</p>            
-        <p><label for="{{ form.email.id_for_label }}" class="required">E-mail</label><br>
-        {{ form.email }}</p>
-        <p><label for="{{ form.password1.id_for_label }}" class="required">Password</label><br>
-        {{ form.password1 }}</p>
-        <p><label for="{{ form.password2.id_for_label }}" class="required">Confirm password</label><br>
-        {{ form.password2 }}</p>
-        <p><button type="submit">Create your account</button></p>
+        {{ form.non_field_errors}}
+        <p>
+          <label for="{{ form.first_name.id_for_label }}">First name</label><br>
+          {{ form.first_name.errors }}
+          {{ form.first_name }}
+        </p>
+        <p>
+          <label for="{{ form.last_name.id_for_label }}">Last name</label><br>
+          {{ form.last_name.errors }}
+          {{ form.last_name }}
+        </p>            
+        <p>
+          <label for="{{ form.email.id_for_label }}" class="required">E-mail</label><br>
+          {{ form.email.errors }}
+          {{ form.email }}
+        </p>
+        <p>
+          <label for="{{ form.password1.id_for_label }}" class="required">Password</label><br>
+          {{ form.password1.errors }}
+          {{ form.password1 }}
+        </p>
+        <p>
+          <label for="{{ form.password2.id_for_label }}" class="required">Confirm password</label><br>
+          {{ form.password2.errors }}
+          {{ form.password2 }}
+        </p>
+        <p><button class="submit-button" type="submit">Create your account</button></p>
       </form>
   </div>
 </div>
