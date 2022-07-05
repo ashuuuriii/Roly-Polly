@@ -1,3 +1,4 @@
+from telnetlib import STATUS
 import uuid
 
 from django.db import models
@@ -30,3 +31,24 @@ class Choice(models.Model):
 
     def __str__(self):
         return f"event_{self.event_id}_choice"
+
+
+class Attendee(models.Model):
+    name = models.CharField(max_length=64, null=False)
+    event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
+    choice_id = models.ForeignKey(Choice, on_delete=models.CASCADE)
+
+
+class AttendeeChoice(models.Model):
+    YES = 1
+    MAYBE = 2
+    NO = 3
+    STATUS = (
+        (YES, "Yes"),
+        (MAYBE, "Maybe"),        
+        (NO, "No"),
+    )
+
+    attendee_id = models.ForeignKey(Attendee, on_delete=models.CASCADE)
+    choice_id = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    status = models.PositiveSmallIntegerField(choices=STATUS)
