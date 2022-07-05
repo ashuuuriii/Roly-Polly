@@ -98,7 +98,6 @@ class EventVoteTests(TestCase):
             "password": "password123!",
         }
         new_user = get_user_model().objects.create_user(**credentials)
-        self.client.force_login(new_user)
         self.new_event = Event.objects.create(event_name="New Event", user_id=new_user)
 
     def test_url_exists_at_correct_location(self):
@@ -113,3 +112,27 @@ class EventVoteTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "vote.html")
+
+
+class VoteUnlockTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(event_name="New Event", user_id=new_user)
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get(
+            f"/events/unlock/{self.new_event.access_link}", follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_newevent_success_view_name(self):
+        response = self.client.get(
+            reverse("unlock", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "unlock_vote.html")

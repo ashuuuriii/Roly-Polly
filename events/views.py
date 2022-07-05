@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import NewEventForm, ChoiceFormset
+from .forms import NewEventForm, ChoiceFormset, UnlockVoteForm
 from .models import Choice
 
 
@@ -52,3 +52,7 @@ class NewEventSuccessView(LoginRequiredMixin, TemplateView):
 
 class EventVoteView(TemplateView):
     template_name = "vote.html"
+
+
+class UnlockVoteView(TemplateView):
+    template_name = "unlock_vote.html"
