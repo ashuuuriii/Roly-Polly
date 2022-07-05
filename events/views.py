@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -29,7 +30,7 @@ def new_event_view(request):
                 choice.event_id = event
                 choice.save()
             choice_formset.save()
-            return redirect('success', uuid_slug=event.access_link)
+            return redirect("success", uuid_slug=event.access_link)
 
     return render(
         request,
@@ -43,5 +44,11 @@ class NewEventSuccessView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['event_view_link'] = '/#'  # TODO: change this to reverse(EventDetailView)
+        context["event_view_link"] = reverse(
+            "vote", kwargs={"uuid_slug": context.get("uuid_slug")}
+        )
         return context
+
+
+class EventVoteView(TemplateView):
+    template_name = "vote.html"
