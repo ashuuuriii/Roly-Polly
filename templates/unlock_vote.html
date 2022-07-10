@@ -5,4 +5,10 @@
 {% block content %}
 <h1>This event is private!</h1>
 <p>Please enter the password shared by your host below to unlock.</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p}}
+  <input type="hidden" name="event_id" value="{{ uuid_slug }}">
+  <button type="submit">Unlock</button>
+</form>
 {% endblock %}
