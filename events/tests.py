@@ -90,7 +90,7 @@ class NewEventSuccessTests(TestCase):
         self.assertTemplateUsed(response, "new_event_success.html")
 
 
-class EventVoteTests(TestCase):
+class LoggedInEventVoteTests(TestCase):
     def setUp(self):
         credentials = {
             "username": "email",
@@ -98,7 +98,10 @@ class EventVoteTests(TestCase):
             "password": "password123!",
         }
         new_user = get_user_model().objects.create_user(**credentials)
-        self.new_event = Event.objects.create(event_name="New Event", user_id=new_user)
+        self.client.force_login(new_user)
+        self.new_event = Event.objects.create(
+            event_name="New Event", user_id=new_user, password_protect=True
+        )
 
     def test_url_exists_at_correct_location(self):
         response = self.client.get(
@@ -114,6 +117,62 @@ class EventVoteTests(TestCase):
         self.assertTemplateUsed(response, "vote.html")
 
 
+class AnonEventVoteTest(TestCase):
+    def test_no_password_protection(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event", user_id=new_user, password_protect=False
+        )
+
+        response = self.client.get(
+            f"/events/vote/{self.new_event.access_link}", follow=False
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "vote.html")
+
+    def test_password_protected_view_no_session(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event", user_id=new_user, password_protect=True
+        )
+
+        response = self.client.get(
+            f"/events/vote/{self.new_event.access_link}", follow=False
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_password_protected_view_with_session(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event", user_id=new_user, password_protect=True
+        )
+
+        session = self.client.session
+        session[f"unlock-{self.new_event.access_link}"] = True
+        session.save()
+
+        response = self.client.get(
+            f"/events/vote/{self.new_event.access_link}", follow=False
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "vote.html")
+
+
 class VoteUnlockTests(TestCase):
     def setUp(self):
         credentials = {
@@ -121,8 +180,13 @@ class VoteUnlockTests(TestCase):
             "email": "email@email.com",
             "password": "password123!",
         }
-        new_user = get_user_model().objects.create_user(**credentials)
-        self.new_event = Event.objects.create(event_name="New Event", user_id=new_user)
+        self.new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event",
+            user_id=self.new_user,
+            password_protect=True,
+            password="password",
+        )
 
     def test_url_exists_at_correct_location(self):
         response = self.client.get(
@@ -136,3 +200,20 @@ class VoteUnlockTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "unlock_vote.html")
+
+    def test_logged_in_redirect(self):
+        self.client.force_login(self.new_user)
+        response = self.client.get(
+            reverse("unlock", args=[self.new_event.access_link]), follow=False
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_unlock_session_redirect(self):
+        session = self.client.session
+        session[f"unlock-{self.new_event.access_link}"] = True
+        session.save()
+
+        response = self.client.get(
+            reverse("unlock", args=[self.new_event.access_link]), follow=False
+        )
+        self.assertEqual(response.status_code, 302)
