@@ -3,9 +3,17 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, FormView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import modelformset_factory
 
-from .forms import NewEventForm, ChoiceFormset, UnlockVoteForm
-from .models import Choice, Event
+from .forms import (
+    NewEventForm,
+    ChoiceFormset,
+    UnlockVoteForm,
+    AttendeeForm,
+    ChoiceVoteForm,
+    ChoiceVoteBaseFormset,
+)
+from .models import Choice, Event, AttendeeChoice
 
 
 @login_required
@@ -55,12 +63,33 @@ class EventVoteView(DetailView):
     model = Event
     slug_url_kwarg = "uuid_slug"
     slug_field = "access_link"
+    attendee_form_class = AttendeeForm
+    choice_form_class = ChoiceVoteForm
 
     def get(self, request, *args, **kwargs):
         # makes the uuid slug available within context
         self.object = self.get_object()
         context = self.get_context_data(object=self.object, **kwargs)
         return self.render_to_response(context)
+
+    def get_context_data(self, attendee_form=None, vote_form=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["choices"] = Choice.objects.filter(event_id=context["object"].pk)
+        context["attendee_form"] = (
+            self.attendee_form_class() if not attendee_form else attendee_form
+        )
+        context["vote_form"] = (
+            modelformset_factory(
+                AttendeeChoice,
+                form=self.choice_form_class,
+                extra=len(context["choices"]),
+                fields=["status"],
+                formset=ChoiceVoteBaseFormset,
+            )
+            if not vote_form
+            else vote_form
+        )
+        return context
 
     def render_to_response(self, context, **response_kwargs):
         """
@@ -80,6 +109,44 @@ class EventVoteView(DetailView):
             return super().render_to_response(context, **response_kwargs)
         else:
             return redirect("unlock", uuid_slug=uuid)
+
+    def form_valid(self, request, attendee_form, vote_formset):
+        # get db objects to save model forms
+        choice_ids = request.POST.getlist("choice-id")
+        choices = Choice.objects.filter(id__in=choice_ids)
+        event = Event.objects.get(access_link=request.POST.get("event-uuid"))
+
+        # save forms with foreign keys
+        attendee = attendee_form.save(commit=False)
+        attendee.event_id = event
+        attendee.save()
+        for i, formset in enumerate(vote_formset):
+            vote = formset.save(commit=False)
+            vote.choice_id = choices[i]
+            vote.attendee_id = attendee
+            vote.save()
+        vote_formset.save()
+        return redirect("home")
+
+    def form_invalid(self, attendee_form, vote_form):
+        return self.render_to_response(self.get_context_data(attendee_form=attendee_form, vote_form=vote_form))
+
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        attendee_form = self.attendee_form_class(request.POST)
+        vote_formset_obj = modelformset_factory(
+            AttendeeChoice,
+            form=self.choice_form_class,
+            extra=self.request.POST.get("total_rows"),
+            fields=["status"],
+            formset=ChoiceVoteBaseFormset,
+        )
+        vote_formset = vote_formset_obj(request.POST)
+
+        if attendee_form.is_valid() and vote_formset.is_valid():
+            return self.form_valid(request, attendee_form, vote_formset)
+        else:
+            return self.form_invalid(attendee_form, vote_formset)
 
 
 class UnlockVoteView(FormView):
