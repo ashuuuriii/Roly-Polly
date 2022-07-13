@@ -176,3 +176,6 @@ CELERY_RESULT_URL = "redis://127.0.0.1:6379/0"
 # https://docs.celeryq.dev/en/latest/userguide/calling.html#calling-serializers
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_ACCEPT_CONTENT = ["pickle"]
+
+# sessions settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
