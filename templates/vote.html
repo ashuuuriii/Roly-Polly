@@ -1,7 +1,24 @@
 {% extends "base.html" %}
+{% load template_zip %}
 
 {% block title %}Vote{% endblock %}
 
 {% block content %}
-<h1>Vote</h1>
+<h1>{{ object.event_name }}</h1>
+<p>{{ object.event_description }}</p>
+<form method="post">
+  {% csrf_token %}
+  {{ attendee_form.as_p }}
+  {{ vote_form.management_form }}
+  {% for form, choice in vote_form|zip:choices %}
+    <p>
+      <input type="hidden" name="choice-id" value="{{ choice.pk }}" />
+      {{ choice.time_from}}-{{ choice.time_from}}
+      {{ form.status }}<br>
+      {{ form.status.errors}}
+    </p>
+  {% endfor %}      
+  <input type="hidden" name="event-uuid" value="{{ event.access_link }}"/>
+  <button type="submit">Vote</button>
+</form>
 {% endblock %}
