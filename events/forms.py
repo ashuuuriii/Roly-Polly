@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
+from django.forms.models import BaseModelFormSet
 
-from .models import Event, Choice
+from .models import Event, Choice, Attendee, AttendeeChoice
 
 
 class NewEventForm(forms.ModelForm):
@@ -43,3 +44,23 @@ class UnlockVoteForm(forms.Form):
         event_pw = Event.objects.get(access_link=uuid_slug).password
         if not check_password(entered_pw, event_pw):
             raise ValidationError("You have not entered the correct password.")
+
+
+class AttendeeForm(forms.ModelForm):
+    class Meta:
+        model = Attendee
+        fields = ["name"]
+
+
+class ChoiceVoteForm(forms.ModelForm):
+    class Meta:
+        model = AttendeeChoice
+        fields = ["status"]
+
+
+# Overiding the queryset prevents to data persistence problem
+# https://stackoverflow.com/questions/29472751/django-modelformset-factory-sustains-the-previously-submitted-data-even-after-su
+class ChoiceVoteBaseFormset(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        super(ChoiceVoteBaseFormset, self).__init__(*args, **kwargs)
+        self.queryset = AttendeeChoice.objects.none()
