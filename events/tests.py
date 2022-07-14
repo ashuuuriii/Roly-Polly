@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from .models import Event, Choice
+from .models import Attendee, Event, Choice, AttendeeChoice
 
 
 class NewEventPageTests(TestCase):
@@ -171,6 +171,68 @@ class AnonEventVoteTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "vote.html")
+
+
+class VoteViewSubmissionTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event", user_id=new_user, password_protect=True
+        )
+        self.new_choice_first = Choice.objects.create(
+            event_id=self.new_event,
+            time_from=datetime.datetime(2020, 1, 2, 1, 0),
+            time_to=datetime.datetime(2020, 1, 2, 2, 0),
+        )
+        self.new_choice_sec = Choice.objects.create(
+            event_id=self.new_event,
+            time_from=datetime.datetime(2020, 1, 2, 3, 0),
+            time_to=datetime.datetime(2020, 1, 2, 4, 0),
+        )
+
+    def test_vote(self):
+        session = self.client.session
+        session[f"unlock-{self.new_event.access_link}"] = True
+        session.save()
+
+        request = self.client.post(
+            reverse("vote", args=[self.new_event.access_link]),
+            {
+                "name": "First Last",
+                "form-0-status": 2,
+                "form-1-status": 1,
+                "form-TOTAL_FORMS": 2,
+                "form-INITIAL_FORMS": 0,
+                "form-MIN_NUM_FORMS": 0,
+                "form-MAX_NUM_FORMS": 1000,
+                "choice-id": [self.new_choice_first.pk, self.new_choice_sec.pk],
+                "event-uuid": str(self.new_event.access_link),
+            },
+        )
+
+        self.assertEqual(Attendee.objects.last().name, "First Last")
+        self.assertEqual(AttendeeChoice.objects.count(), 2)
+        self.assertEqual(AttendeeChoice.objects.all()[0].status, 2)
+        self.assertEqual(AttendeeChoice.objects.all()[1].status, 1)
+        self.assertTrue(
+            AttendeeChoice.objects.all()[0].attendee_id.name
+            == Attendee.objects.last().name
+        )
+        self.assertTrue(
+            AttendeeChoice.objects.all()[1].attendee_id.name
+            == Attendee.objects.last().name
+        )
+        self.assertTrue(
+            AttendeeChoice.objects.all()[0].choice_id.pk == Choice.objects.all()[0].pk
+        )
+        self.assertTrue(
+            AttendeeChoice.objects.all()[1].choice_id.pk == Choice.objects.all()[1].pk
+        )
 
 
 class VoteUnlockTests(TestCase):
