@@ -24,8 +24,12 @@ class NewEventForm(forms.ModelForm):
 
 class ChoiceForm(forms.ModelForm):
     # TODO: add validation to prevent users from inputting past dates or duplicates
-    time_from = forms.DateTimeField(input_formats=["%d/%m/%Y %H:%M", "%d/%m/%Y"])
-    time_to = forms.DateTimeField(input_formats=["%d/%m/%Y %H:%M", "%d/%m/%Y"])
+    time_from = forms.DateTimeField(
+        input_formats=["%d/%m/%Y %H:%M", "%d/%m/%Y"], required=True
+    )
+    time_to = forms.DateTimeField(
+        input_formats=["%d/%m/%Y %H:%M", "%d/%m/%Y"], required=False
+    )
 
 
 # use formset factory to create dynamic fields

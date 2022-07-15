@@ -25,7 +25,7 @@ class Event(models.Model):
 
 class Choice(models.Model):
     time_from = models.DateTimeField(null=False)
-    time_to = models.DateTimeField(null=False)
+    time_to = models.DateTimeField(null=True)
     event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
 
     def __str__(self):
