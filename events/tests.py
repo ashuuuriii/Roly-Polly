@@ -7,6 +7,62 @@ from django.urls import reverse
 from .models import Attendee, Event, Choice, AttendeeChoice
 
 
+class EventsModelsTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="username",
+            email="username@email.com",
+            password="password",
+        )
+        self.event = Event.objects.create(
+            user_id=self.user,
+            event_name="eventname",
+            event_description="event description",
+            allow_add=True,
+            password_protect=True,
+            password="eventpw",
+        )
+        self.choice = Choice.objects.create(
+            time_from=datetime.datetime(2020, 1, 2, 1, 0),
+            time_to=datetime.datetime(2020, 1, 2, 2, 0),
+            event_id=self.event,
+        )
+        self.attendee = Attendee.objects.create(
+            name="votername",
+            event_id=self.event,
+        )
+        self.attendeechoice = AttendeeChoice.objects.create(
+            status=1,
+            attendee_id=self.attendee,
+            choice_id=self.choice,
+        )
+
+    def test_event_model(self):
+        self.assertEqual(self.event.user_id, self.user)
+        self.assertEqual(self.event.event_name, "eventname")
+        self.assertEqual(self.event.event_description, "event description")
+        self.assertTrue(self.event.allow_add)
+        self.assertTrue(self.event.password_protect)
+        self.assertEqual(str(self.event), "eventname")
+
+    def test_choice_model(self):
+        self.assertEqual(self.choice.time_from, datetime.datetime(2020, 1, 2, 1, 0))
+        self.assertEqual(self.choice.time_to, datetime.datetime(2020, 1, 2, 2, 0))
+        self.assertEqual(self.choice.event_id, self.event)
+        self.assertEqual(str(self.choice), "event_eventname_choice")
+
+    def test_attendee_model(self):
+        self.assertEqual(self.attendee.name, "votername")
+        self.assertEqual(self.attendee.event_id, self.event)
+        self.assertEqual(str(self.attendee), "votername")
+
+    def test_attendee_choice_model(self):
+        self.assertEqual(self.attendeechoice.status, 1)
+        self.assertEqual(self.attendeechoice.attendee_id, self.attendee)
+        self.assertEqual(self.attendeechoice.choice_id, self.choice)
+        self.assertEqual(str(self.attendeechoice), str(self.attendee))
+
+
 class NewEventPageTests(TestCase):
     def setUp(self):
         # TODO: consider testing dynamic formset with Selenium
