@@ -129,10 +129,11 @@ class EventVoteView(DetailView):
         return redirect("home")
 
     def form_invalid(self, attendee_form, vote_form):
-        return self.render_to_response(self.get_context_data(attendee_form=attendee_form, vote_form=vote_form))
+        return self.render_to_response(
+            self.get_context_data(attendee_form=attendee_form, vote_form=vote_form)
+        )
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         attendee_form = self.attendee_form_class(request.POST)
         vote_formset_obj = modelformset_factory(
             AttendeeChoice,
