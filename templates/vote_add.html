@@ -2,6 +2,16 @@
 
 {% block title %}Suggest a time{% endblock %}
 
+{% block static_files %}
+<!-- JS files for datetimepicker -->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!-- XDSoft DateTimePicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+{% endblock %}
+
+
 {% block content %}
 <h1></h1>
 <ul>
@@ -17,18 +27,78 @@
 
 <form method="post">
   {% csrf_token %}
-  {{ forms.management_form }}
   <input type="hidden" name="event" value="{{ event.access_link }}" />
-  {{ forms.non_field_errors }}
-  {% for form in forms %}
-    <div class="event-time-row" id="row-0">
-      {{ form.time_from }}-{{ form.time_to }}
-      {{ form.errors }}
-      {{ form.DELETE }}
-      <button type="button" class="del-button" id="button-0">-</button><br>
-    </div>
+  <div class="time_choices">
+    {{ forms.management_form }}
+    {{ forms.non_field_errors }}
+    {% for form in forms %}
+      <div class="event-time-row" id="row-0">
+        {{ form.time_from }}-{{ form.time_to }}
+        {{ form.errors }}
+        {{ form.DELETE }}
+        <button type="button" class="del-button" id="button-0">-</button><br>
+      </div>
+    {% endfor %}
     <button type="button" class="add-button">+</button>
-  {% endfor %}
+  </div>
   <input type="submit" value="Submit">
 </form>
+<script>
+  "use strict";
+  let formCount =  {{ forms.total_form_count }};
+  const choicesBox = document.querySelector(".time_choices");
+  const formSetCounter = document.querySelector("#id_form-TOTAL_FORMS");
+
+  function addNewChoice(e) {
+      const newForm = `<div class="event-time-row" id="row-${formCount}">
+                       {{ forms.empty_form.time_from|escapejs }}-{{ forms.empty_form.time_to|escapejs }}
+                       {{ forms.empty_form.DELETE|escapejs }}
+                       <button type="button" class="del-button" id="button-${formCount}">-</button><br>
+                       </div>`.replace(/__prefix__/g, formCount);
+      choicesBox
+        .querySelector(".add-button")
+        .insertAdjacentHTML("beforebegin", newForm);
+      choicesBox
+        .querySelector(`#button-${formCount}`)
+        .addEventListener("click", (e) => deleteNewChoice(e));
+
+      $(`#id_form-${formCount}-time_from`).datetimepicker({
+        format: 'd/m/Y H:i',
+        minDate: "0",
+      });
+      $(`#id_form-${formCount}-time_to`).datetimepicker({
+        format: 'd/m/Y H:i',
+        minDate: "0",
+      });
+
+      formCount++;
+      formSetCounter.value++;
+  }
+
+  function deleteNewChoice(e) {
+    const rowNumber = e.target.id.replace ( /[^\d.]/g, "" );
+    const delTargetCheckBox = choicesBox.querySelector(
+      `#id_form-${rowNumber}-DELETE`
+      );
+    const delTargetDiv = choicesBox.querySelector(`#row-${rowNumber}`);
+    delTargetCheckBox.checked = true;
+    delTargetDiv.style.display = "none";
+  }
+
+  choicesBox
+    .querySelector(".add-button")
+    .addEventListener("click", (e) => addNewChoice(e));
+  choicesBox
+    .querySelector("#button-0")
+    .addEventListener("click", (e) => deleteNewChoice(e));
+
+  $("#id_form-0-time_from").datetimepicker({
+    format: 'd/m/Y H:i',
+    minDate: "0",
+  });
+  $("#id_form-0-time_to").datetimepicker({
+    format: 'd/m/Y H:i',
+    minDate: "0",
+    });
+</script>
 {% endblock %}
