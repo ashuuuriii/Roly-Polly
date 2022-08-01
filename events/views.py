@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, FormView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
+from django.core.exceptions import PermissionDenied
 
 from .forms import (
     NewEventForm,
@@ -187,3 +188,62 @@ class UnlockVoteView(FormView):
         uuid_slug = form.data.get("event_id")
         self.request.session[f"unlock-{uuid_slug}"] = True
         return redirect("vote", uuid_slug=uuid_slug)
+
+
+class ChoiceAddView(TemplateView):
+    template_name = "vote_add.html"
+    form_class = ChoiceFormset
+
+    def get_context_data(self, uuid_slug=None, form=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        access_link = uuid_slug if uuid_slug else context.get("uuid_slug")
+        context["event"] = Event.objects.get(access_link=access_link)
+        context["choices_list"] = Choice.objects.filter(event_id=context["event"])
+        context["forms"] = (
+            form if form else self.form_class(queryset=Choice.objects.none())
+        )
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        """
+        Prevent the ChoiceAddView from being rendered if the event creator has not set
+        choice add permissions.
+        """
+        uuid = context.get("event").access_link
+        allow_add = context.get("event").allow_add
+        password_protect = context.get("event").password_protect
+        event_user = str(context.get("event").user_id)
+        current_user = self.request.user.email if self.request.user.id else None
+
+        if (
+            (self.request.session.get(f"unlock-{uuid}") or not password_protect)
+            and allow_add
+        ) or (event_user == current_user):
+            print(context)
+            return super().render_to_response(context, **response_kwargs)
+        else:
+            raise PermissionDenied
+
+    def form_valid(self, request, choice_formset):
+        event = Event.objects.get(access_link=choice_formset.data.get("event"))
+        for i, formset in enumerate(choice_formset):
+            if formset.cleaned_data.get("DELETE"):
+                continue
+            choice = formset.save(commit=False)
+            choice.event_id = event
+            choice.save()
+        return redirect("vote", uuid_slug=event.access_link)
+
+    def form_invalid(self, request, choice_formset):
+        return self.render_to_response(
+            self.get_context_data(
+                uuid_slug=choice_formset.data.get("event"), form=choice_formset
+            )
+        )
+
+    def post(self, request, *args, **kwargs):
+        choice_formset = self.form_class(request.POST)
+        if choice_formset.is_valid():
+            return self.form_valid(request, choice_formset)
+        else:
+            return self.form_invalid(request, choice_formset)

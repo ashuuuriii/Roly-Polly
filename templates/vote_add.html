@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Suggest a time{% endblock %}
+
+{% block content %}
+<h1></h1>
+<ul>
+  {% for choice in choices_list %}
+    <li>
+      {{ choice.time_from }}
+      {% if choice.time_to %}
+        -{{ choice.time_to }}
+      {% endif %}
+    </li>
+  {% endfor %}  
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+  {{ forms.management_form }}
+  <input type="hidden" name="event" value="{{ event.access_link }}" />
+  {{ forms.non_field_errors }}
+  {% for form in forms %}
+    <div class="event-time-row" id="row-0">
+      {{ form.time_from }}-{{ form.time_to }}
+      {{ form.errors }}
+      {{ form.DELETE }}
+      <button type="button" class="del-button" id="button-0">-</button><br>
+    </div>
+    <button type="button" class="add-button">+</button>
+  {% endfor %}
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
