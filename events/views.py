@@ -246,3 +246,12 @@ class ChoiceAddView(TemplateView):
             return self.form_valid(request, choice_formset)
         else:
             return self.form_invalid(request, choice_formset)
+
+
+class DashboardView(TemplateView):
+    template_name = "dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["name"] = self.request.user.first_name
+        return context

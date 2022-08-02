@@ -19,7 +19,7 @@
         <li><a href="{% url 'about' %}" class="nav-bar-text">About</a></li>
         <li><a href="{% url 'faq' %}" class="nav-bar-text">FAQ</a></li>
         {% if user.is_authenticated %}
-          <li><a href="#" class="nav-bar-text">My Dashboard</a></li>
+          <li><a href="{% url 'dashboard' %}" class="nav-bar-text">My Dashboard</a></li>
           <li><a href="{% url 'account_logout' %}" class="nav-bar-text">Logout</a></li>
         {% else %}
           <li><a href="{% url 'account_login' %}" class="nav-bar-text">Log In</a></li>
