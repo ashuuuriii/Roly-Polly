@@ -219,7 +219,6 @@ class ChoiceAddView(TemplateView):
             (self.request.session.get(f"unlock-{uuid}") or not password_protect)
             and allow_add
         ) or (event_user == current_user):
-            print(context)
             return super().render_to_response(context, **response_kwargs)
         else:
             raise PermissionDenied

@@ -23,8 +23,8 @@ class EventsModelsTests(TestCase):
             password="eventpw",
         )
         self.choice = Choice.objects.create(
-            time_from=datetime.datetime(2020, 1, 2, 1, 0),
-            time_to=datetime.datetime(2020, 1, 2, 2, 0),
+            time_from=datetime.datetime(2020, 1, 2, 1, 0, tzinfo=datetime.timezone.utc),
+            time_to=datetime.datetime(2020, 1, 2, 2, 0, tzinfo=datetime.timezone.utc),
             event_id=self.event,
         )
         self.attendee = Attendee.objects.create(
@@ -46,8 +46,14 @@ class EventsModelsTests(TestCase):
         self.assertEqual(str(self.event), "eventname")
 
     def test_choice_model(self):
-        self.assertEqual(self.choice.time_from, datetime.datetime(2020, 1, 2, 1, 0))
-        self.assertEqual(self.choice.time_to, datetime.datetime(2020, 1, 2, 2, 0))
+        self.assertEqual(
+            self.choice.time_from,
+            datetime.datetime(2020, 1, 2, 1, 0, tzinfo=datetime.timezone.utc),
+        )
+        self.assertEqual(
+            self.choice.time_to,
+            datetime.datetime(2020, 1, 2, 2, 0, tzinfo=datetime.timezone.utc),
+        )
         self.assertEqual(self.choice.event_id, self.event)
         self.assertEqual(str(self.choice), "event_eventname_choice")
 
@@ -242,13 +248,13 @@ class VoteViewSubmissionTests(TestCase):
         )
         self.new_choice_first = Choice.objects.create(
             event_id=self.new_event,
-            time_from=datetime.datetime(2020, 1, 2, 1, 0),
-            time_to=datetime.datetime(2020, 1, 2, 2, 0),
+            time_from=datetime.datetime(2020, 1, 2, 1, 0, tzinfo=datetime.timezone.utc),
+            time_to=datetime.datetime(2020, 1, 2, 2, 0, tzinfo=datetime.timezone.utc),
         )
         self.new_choice_sec = Choice.objects.create(
             event_id=self.new_event,
-            time_from=datetime.datetime(2020, 1, 2, 3, 0),
-            time_to=datetime.datetime(2020, 1, 2, 4, 0),
+            time_from=datetime.datetime(2020, 1, 2, 3, 0, tzinfo=datetime.timezone.utc),
+            time_to=datetime.datetime(2020, 1, 2, 4, 0, tzinfo=datetime.timezone.utc),
         )
 
     def test_vote(self):
@@ -335,3 +341,52 @@ class VoteUnlockTests(TestCase):
             reverse("unlock", args=[self.new_event.access_link]), follow=False
         )
         self.assertEqual(response.status_code, 302)
+
+
+class VoteAddTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        self.new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event",
+            user_id=self.new_user,
+            password_protect=True,
+            password="password",
+        )
+        self.client.force_login(self.new_user)
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get(
+            f"/events/add/{self.new_event.access_link}", follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_newevent_success_view_name(self):
+        response = self.client.get(
+            reverse("add", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "vote_add.html")
+
+    def test_add_new_time(self):
+        test_data = {
+            "form-0-time_from": "01/01/2022",
+            "form-0-time_to": "02/01/2022",
+            "event": self.new_event.access_link,
+            "form-TOTAL_FORMS": 1,
+            "form-INITIAL_FORMS": 0,
+            "form-MIN_NUM_FORMS": 0,
+            "form-MAX_NUM_FORMS": 1000,
+        }
+        response = self.client.post(
+            reverse("add", args=[self.new_event.access_link]), test_data
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            Choice.objects.last().time_from,
+            datetime.datetime(2022, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
+        )
