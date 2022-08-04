@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, FormView, DetailView
+from django.views.generic import TemplateView, FormView, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.core.exceptions import PermissionDenied
@@ -248,8 +248,13 @@ class ChoiceAddView(TemplateView):
             return self.form_invalid(request, choice_formset)
 
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, ListView):
     template_name = "dashboard.html"
+    model = Event
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(user_id=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

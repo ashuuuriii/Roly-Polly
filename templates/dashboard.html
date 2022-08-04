@@ -9,4 +9,9 @@
 {% else %}
   <h1>Welcome back!</h1>
 {% endif %}
+<ul>
+  {% for event in object_list %}
+    <li>{{ event.event_name }}</li>
+  {% endfor %}
+</ul>
 {% endblock %}
