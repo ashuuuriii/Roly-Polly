@@ -390,3 +390,33 @@ class VoteAddTests(TestCase):
             Choice.objects.last().time_from,
             datetime.datetime(2022, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
         )
+
+
+class DashboardViewTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        self.new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event",
+            user_id=self.new_user,
+            password_protect=True,
+            password="password",
+        )
+        self.client.force_login(self.new_user)
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get("/events/dashboard", follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_name(self):
+        response = self.client.get(reverse("dashboard"), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "dashboard.html")
+
+    def test_event_in_list(self):
+        response = self.client.get(reverse("dashboard"), follow=True)
+        self.assertContains(response, "New Event")
