@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.event_name }}{% endblock %}
+
+{% block content %}
+<button type="button">Edit</button>
+<button type="button">Delete</button>
+<div class="details-container">
+  <h1>{{ event.event_name }}</h1>
+  <h2>Choices</h2>
+  <ul>
+    {% for choice in choices %}
+    <li>
+      {{ choice.time_from }}
+      {% if choice.time_to %}
+        -{{ choice.time_to }}
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="results-container">
+  <h1>Results</h1>
+</div>
+{% endblock %}

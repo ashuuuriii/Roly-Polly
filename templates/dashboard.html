@@ -11,7 +11,7 @@
 {% endif %}
 <ul>
   {% for event in object_list %}
-    <li>{{ event.event_name }}</li>
+    <li><a href="{% url 'event' uuid_slug=event.access_link %}">{{ event.event_name }}</a></li>
   {% endfor %}
 </ul>
 {% endblock %}

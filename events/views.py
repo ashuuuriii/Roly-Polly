@@ -260,3 +260,15 @@ class DashboardView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["name"] = self.request.user.first_name
         return context
+
+
+class EventDetailView(LoginRequiredMixin, DetailView):
+    template_name = "event_detail.html"
+    model = Event
+    slug_url_kwarg = "uuid_slug"
+    slug_field = "access_link"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["choices"] = Choice.objects.filter(event_id=context.get("event"))
+        return context
