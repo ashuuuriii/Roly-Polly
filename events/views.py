@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, FormView, DetailView, ListView
+from django.views.generic import TemplateView, FormView, DetailView, ListView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory
 from django.core.exceptions import PermissionDenied
@@ -272,3 +272,11 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["choices"] = Choice.objects.filter(event_id=context.get("event"))
         return context
+
+
+class EventDeleteView(LoginRequiredMixin, DeleteView):
+    model = Event
+    slug_url_kwarg = "uuid_slug"
+    slug_field = "access_link"
+    success_url = reverse_lazy("dashboard")
+    template_name = "delete_event.html"

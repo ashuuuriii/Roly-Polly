@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Delete{% endblock %}
+
+{% block content %}
+<p>Are you sure you want to delete {{ object.event_name }}?</p>
+<form method="post">
+  {% csrf_token %}
+  <a href="{% url 'event' uuid_slug=object.access_link %}">
+    <button type="button" >Go back</button>
+  </a>
+  <button type="submit">Confirm</button>
+</form>
+{% endblock %}

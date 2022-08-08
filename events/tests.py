@@ -450,3 +450,35 @@ class EventDetailViewTests(TestCase):
     def test_event_in_title(self):
         response = self.client.get(reverse("event", args=[self.new_event.access_link]), follow=True)
         self.assertContains(response, "New Event")
+
+
+class EventDeleteViewTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        self.new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event",
+            user_id=self.new_user,
+            password_protect=True,
+            password="password",
+        )
+        self.client.force_login(self.new_user)
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get(f"/events/delete/{self.new_event.access_link}", follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_name(self):
+        response = self.client.get(reverse("delete", args=[self.new_event.access_link]), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "delete_event.html")
+
+    def test_event_deleted(self):
+        response = self.client.post(reverse("delete", args=[self.new_event.access_link]))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Event.objects.count(), 0)

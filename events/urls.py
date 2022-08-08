@@ -8,11 +8,13 @@ from .views import (
     ChoiceAddView,
     DashboardView,
     EventDetailView,
+    EventDeleteView,
 )
 
 
 urlpatterns = [
-    path("<uuid:uuid_slug>", EventDetailView.as_view(), name=("event")),
+    path("delete/<uuid:uuid_slug>", EventDeleteView.as_view(), name="delete"),
+    path("<uuid:uuid_slug>", EventDetailView.as_view(), name="event"),
     path("dashboard", DashboardView.as_view(), name="dashboard"),
     path("unlock/<uuid:uuid_slug>", UnlockVoteView.as_view(), name="unlock"),
     path("vote/<uuid:uuid_slug>", EventVoteView.as_view(), name="vote"),
