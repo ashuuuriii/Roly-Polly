@@ -1,8 +1,15 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, FormView, DetailView, ListView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import (
+    TemplateView,
+    FormView,
+    DetailView,
+    ListView,
+    DeleteView,
+    UpdateView,
+)
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms import modelformset_factory
 from django.core.exceptions import PermissionDenied
 
@@ -262,7 +269,7 @@ class DashboardView(LoginRequiredMixin, ListView):
         return context
 
 
-class EventDetailView(LoginRequiredMixin, DetailView):
+class EventDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = "event_detail.html"
     model = Event
     slug_url_kwarg = "uuid_slug"
@@ -273,10 +280,31 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         context["choices"] = Choice.objects.filter(event_id=context.get("event"))
         return context
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user_id == self.request.user
 
-class EventDeleteView(LoginRequiredMixin, DeleteView):
+
+class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
     slug_url_kwarg = "uuid_slug"
     slug_field = "access_link"
     success_url = reverse_lazy("dashboard")
     template_name = "delete_event.html"
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user_id == self.request.user
+
+
+class EventEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Event
+    template_name = "edit_event.html"
+    form_class = NewEventForm
+    slug_url_kwarg = "uuid_slug"
+    slug_field = "access_link"
+    success_url = "/"
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user_id == self.request.user

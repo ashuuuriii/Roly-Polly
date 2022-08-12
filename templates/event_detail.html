@@ -3,7 +3,9 @@
 {% block title %}{{ event.event_name }}{% endblock %}
 
 {% block content %}
-<button type="button">Edit</button>
+<a href="{% url 'edit' uuid_slug=event.access_link %}">
+  <button type="button">Edit</button>
+</a>
 <a href="{% url 'delete' uuid_slug=event.access_link %}">
   <button type="button">Delete</button>
 </a>

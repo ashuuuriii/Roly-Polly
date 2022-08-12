@@ -443,13 +443,36 @@ class EventDetailViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_name(self):
-        response = self.client.get(reverse("event", args=[self.new_event.access_link]), follow=True)
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "event_detail.html")
 
     def test_event_in_title(self):
-        response = self.client.get(reverse("event", args=[self.new_event.access_link]), follow=True)
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
         self.assertContains(response, "New Event")
+
+    def test_user_permissions(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertTemplateUsed(response, "account/login.html")
+
+        credentials = {
+            "username": "email2",
+            "email": "email2@email.com",
+            "password": "password123!",
+        }
+        diff_user = get_user_model().objects.create_user(**credentials)
+        self.client.force_login(diff_user)
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertEqual(response.status_code, 403)
 
 
 class EventDeleteViewTests(TestCase):
@@ -469,16 +492,41 @@ class EventDeleteViewTests(TestCase):
         self.client.force_login(self.new_user)
 
     def test_url_exists_at_correct_location(self):
-        response = self.client.get(f"/events/delete/{self.new_event.access_link}", follow=True)
+        response = self.client.get(
+            f"/events/delete/{self.new_event.access_link}", follow=True
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_view_name(self):
-        response = self.client.get(reverse("delete", args=[self.new_event.access_link]), follow=True)
+        response = self.client.get(
+            reverse("delete", args=[self.new_event.access_link]), follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "delete_event.html")
 
     def test_event_deleted(self):
-        response = self.client.post(reverse("delete", args=[self.new_event.access_link]))
+        response = self.client.post(
+            reverse("delete", args=[self.new_event.access_link])
+        )
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Event.objects.count(), 0)
+
+    def test_user_permissions(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertTemplateUsed(response, "account/login.html")
+
+        credentials = {
+            "username": "email2",
+            "email": "email2@email.com",
+            "password": "password123!",
+        }
+        diff_user = get_user_model().objects.create_user(**credentials)
+        self.client.force_login(diff_user)
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertEqual(response.status_code, 403)

@@ -9,10 +9,12 @@ from .views import (
     DashboardView,
     EventDetailView,
     EventDeleteView,
+    EventEditView,
 )
 
 
 urlpatterns = [
+    path("edit/<uuid:uuid_slug>", EventEditView.as_view(), name="edit"),
     path("delete/<uuid:uuid_slug>", EventDeleteView.as_view(), name="delete"),
     path("<uuid:uuid_slug>", EventDetailView.as_view(), name="event"),
     path("dashboard", DashboardView.as_view(), name="dashboard"),
