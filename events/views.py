@@ -66,7 +66,7 @@ class NewEventSuccessView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class EventVoteView(DetailView):
+class EventVoteView(UserPassesTestMixin, DetailView):
     template_name = "vote.html"
     model = Event
     slug_url_kwarg = "uuid_slug"
@@ -99,24 +99,23 @@ class EventVoteView(DetailView):
         )
         return context
 
-    def render_to_response(self, context, **response_kwargs):
+    def handle_no_permission(self):
+        return redirect("unlock", uuid_slug=self.get_object().access_link)
+
+    def test_func(self):
         """
         checks if the user is the user creator, has already entered the password
         or if the event is password protected.
         """
-        uuid = context.get("uuid_slug")
-        password_protect = context.get("event").password_protect
-        event_user = str(context.get("event").user_id)
-        current_user = self.request.user.email if self.request.user.id else None
-
+        obj = self.get_object()
         if (
-            self.request.session.get(f"unlock-{uuid}")
-            or not password_protect
-            or (event_user == current_user)
+            self.request.session.get(f"unlock-{obj.access_link}")
+            or not obj.password_protect
+            or (obj.user_id == self.request.user)
         ):
-            return super().render_to_response(context, **response_kwargs)
+            return True
         else:
-            return redirect("unlock", uuid_slug=uuid)
+            return False
 
     def form_valid(self, request, attendee_form, vote_formset):
         # get db objects to save model forms
