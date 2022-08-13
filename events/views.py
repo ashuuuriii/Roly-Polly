@@ -157,34 +157,30 @@ class EventVoteView(UserPassesTestMixin, DetailView):
             return self.form_invalid(attendee_form, vote_formset)
 
 
-class UnlockVoteView(FormView):
+class UnlockVoteView(UserPassesTestMixin, FormView):
     template_name = "unlock_vote.html"
     form_class = UnlockVoteForm
 
-    def get(self, request, *args, **kwargs):
-        # makes the uuid slug available within context
-        return self.render_to_response(self.get_context_data(**kwargs))
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["uuid_slug"] = kwargs.get("uuid_slug")
+        context["uuid_slug"] = self.kwargs.get("uuid_slug")
         context["event_data"] = Event.objects.get(access_link=context["uuid_slug"])
         return context
 
-    def render_to_response(self, context, **response_kwargs):
-        uuid = context.get("uuid_slug")
-        event_user = str(context.get("event_data").user_id)
-        password_protect = context.get("event_data").password_protect
-        current_user = self.request.user.email if self.request.user.id else None
+    def handle_no_permission(self):
+        return redirect("vote", uuid_slug=self.kwargs["uuid_slug"])
 
+    def test_func(self):
+        obj = Event.objects.get(access_link=self.kwargs["uuid_slug"])
+        # redirect to the vote page if test_func returns False
         if (
-            self.request.session.get(f"unlock-{uuid}")
-            or not password_protect
-            or (event_user == current_user)
+            self.request.session.get(f"unlock-{obj.access_link}")
+            or not obj.password_protect
+            or (obj.user_id == self.request.user)
         ):
-            return redirect("vote", uuid_slug=uuid)
+            return False
         else:
-            return super().render_to_response(context, **response_kwargs)
+            return True
 
     def form_valid(self, form):
         """
@@ -196,7 +192,7 @@ class UnlockVoteView(FormView):
         return redirect("vote", uuid_slug=uuid_slug)
 
 
-class ChoiceAddView(TemplateView):
+class ChoiceAddView(UserPassesTestMixin, TemplateView):
     template_name = "vote_add.html"
     form_class = ChoiceFormset
 
@@ -210,24 +206,24 @@ class ChoiceAddView(TemplateView):
         )
         return context
 
-    def render_to_response(self, context, **response_kwargs):
-        """
-        Prevent the ChoiceAddView from being rendered if the event creator has not set
-        choice add permissions.
-        """
-        uuid = context.get("event").access_link
-        allow_add = context.get("event").allow_add
-        password_protect = context.get("event").password_protect
-        event_user = str(context.get("event").user_id)
-        current_user = self.request.user.email if self.request.user.id else None
-
-        if (
-            (self.request.session.get(f"unlock-{uuid}") or not password_protect)
-            and allow_add
-        ) or (event_user == current_user):
-            return super().render_to_response(context, **response_kwargs)
+    def handle_no_permission(self):
+        if Event.objects.get(access_link=self.kwargs["uuid_slug"]).allow_add:
+            return super(self).handle_no_permission()
         else:
             raise PermissionDenied
+
+    def test_func(self):
+        obj = Event.objects.get(access_link=self.kwargs["uuid_slug"])
+        if (
+            (
+                self.request.session.get(f"unlock-{obj.access_link}")
+                or not obj.password_protect
+            )
+            and obj.allow_add
+        ) or (obj.user_id == self.request.user):
+            return True
+        else:
+            return False
 
     def form_valid(self, request, choice_formset):
         event = Event.objects.get(access_link=choice_formset.data.get("event"))
