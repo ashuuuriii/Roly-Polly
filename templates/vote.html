@@ -6,7 +6,9 @@
 {% block content %}
 <h1>{{ object.event_name }}</h1>
 <p>{{ object.event_description }}</p>
-<a href="{% url 'add' uuid_slug=object.access_link %}"><button type="button" class="add-vote">+</button></a>
+{% if object.allow_add %}
+  <a href="{% url 'add' uuid_slug=object.access_link %}"><button type="button" class="add-vote">+</button></a>
+{% endif %}
 <form method="post">
   {% csrf_token %}
   {{ attendee_form.as_p }}
