@@ -250,6 +250,31 @@ class ChoiceAddView(UserPassesTestMixin, TemplateView):
             return self.form_invalid(request, choice_formset)
 
 
+class ChoiceDeleteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    template_name = "vote_delete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = Event.objects.get(access_link=context.get("uuid_slug"))
+        context["choices"] = Choice.objects.filter(event_id=event)
+        return context
+
+    def test_func(self):
+        obj = Event.objects.get(access_link=self.kwargs.get("uuid_slug"))
+        return obj.user_id == self.request.user
+
+    def post(self, request, *args, **kwargs):
+        # Add support for browsers which only accept GET and POST similar to DeletionMixin.
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        del_ids = [key for key in request.POST.keys() if key.isnumeric()]
+        del_objs = Choice.objects.filter(pk__in=del_ids)
+        for obj in del_objs:
+            obj.delete()
+        return redirect("event", uuid_slug=self.kwargs.get("uuid_slug"))
+
+
 class DashboardView(LoginRequiredMixin, ListView):
     template_name = "dashboard.html"
     model = Event

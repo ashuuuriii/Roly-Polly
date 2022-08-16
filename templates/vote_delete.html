@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Options{% endblock %}
+
+{% block content %}
+<h1>Delete Choice Options</h1>
+<form method="post">
+  {% csrf_token %}
+  <ul>
+  {% for choice in choices %}
+  <li>
+    <label for="{{ choice.id }}">
+        {{ choice.time_from }}
+        {% if choice.time_to %}
+        -{{ choice.time_to }}
+        {% endif %}
+    </label>
+    <input type="checkbox" id="{{ choice.id }}" name="{{ choice.id }}">
+  </li>
+  {% endfor %}
+  </ul>
+  <input type="submit" value="Delete">
+</form>
+{% endblock %}

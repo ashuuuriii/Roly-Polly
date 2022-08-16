@@ -530,3 +530,68 @@ class EventDeleteViewTests(TestCase):
             reverse("event", args=[self.new_event.access_link]), follow=True
         )
         self.assertEqual(response.status_code, 403)
+
+
+class ChoiceDeleteViewTests(TestCase):
+    def setUp(self):
+        credentials = {
+            "username": "email",
+            "email": "email@email.com",
+            "password": "password123!",
+        }
+        self.new_user = get_user_model().objects.create_user(**credentials)
+        self.new_event = Event.objects.create(
+            event_name="New Event",
+            user_id=self.new_user,
+            password_protect=True,
+            password="password",
+        )
+        self.new_choice = Choice.objects.create(
+            time_from=datetime.datetime(2020, 1, 2, 1, 0, tzinfo=datetime.timezone.utc),
+            time_to=datetime.datetime(2020, 1, 2, 2, 0, tzinfo=datetime.timezone.utc),
+            event_id=self.new_event,
+        )
+        self.client.force_login(self.new_user)
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get(
+            f"/events/delete_choice/{self.new_event.access_link}", follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_name(self):
+        response = self.client.get(
+            reverse("delete_choice", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "vote_delete.html")
+
+    def test_delete_choice(self):
+        response = self.client.post(
+            reverse("delete_choice", args=[self.new_event.access_link]),
+            {
+                self.new_choice.pk: "on",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Choice.objects.count(), 0)
+
+    def test_user_permissions(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse("delete_choice", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertTemplateUsed(response, "account/login.html")
+
+        credentials = {
+            "username": "email2",
+            "email": "email2@email.com",
+            "password": "password123!",
+        }
+        diff_user = get_user_model().objects.create_user(**credentials)
+        self.client.force_login(diff_user)
+        response = self.client.get(
+            reverse("event", args=[self.new_event.access_link]), follow=True
+        )
+        self.assertEqual(response.status_code, 403)

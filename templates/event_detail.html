@@ -13,6 +13,12 @@
 <div class="details-container">
   <h1>{{ event.event_name }}</h1>
   <h2>Choices</h2>
+  <a href="{% url 'add' uuid_slug=event.access_link %}">
+    <button type="button">Add</button>
+  </a>
+  <a href="{% url 'delete_choice' uuid_slug=event.access_link %}">
+    <button type="button">Delete</button>
+  </a>  
   <ul>
     {% for choice in choices %}
     <li>
