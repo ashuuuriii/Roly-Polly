@@ -27,7 +27,7 @@ h1 {
 }
 
 .signup-description > a {
-  color: #0091e7;
+  color: var(--blue);
 }
 
 label {
@@ -45,7 +45,7 @@ input {
   margin-top: 1%;
   border-style: solid;
   border-radius: 5px;
-  border-color: #000;
+  border-color: var(--contrast-dark);
 }
 
 .submit-button {
@@ -56,13 +56,13 @@ input {
   height: calc(10px + 1.5vw);
   border-radius: 5px;
   border-style: none;
-  background-color: #0091e7;
-  color: #fff;
+  background-color: var(--blue);
+  color: var(--contrast-light);
   font-size: 1rem;
 }
 
 .submit-button:hover {
-  background-color: #2498db;
+  cursor: pointer;
 }
 
 .required::after {
@@ -70,6 +70,6 @@ input {
 }
 
 .errorlist {
-  background-color: #c1035b;
-  color: #fff;
+  background-color: var(--red);
+  color: var(--contrast-light);
 }

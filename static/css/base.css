@@ -3,6 +3,19 @@
   src: url('fonts/SEASRN__-webfont.woff') format('woff');
 }
 
+/* set colour scheme variables */
+:root {
+  --contrast-light: white;
+  --contrast-light-alpha: rgba(255, 255, 255, 0.150);
+  --contrast-dark: rgb(0, 0, 0);
+  --contrast-dark-alpha: rgba(0, 0, 0, 0.15);
+  --red: #FF1D58;
+  --pink: #F75990;
+  --yellow: #FFF685;
+  --light-blue: #00DDFF;
+  --blue: #0049B7;
+}
+
 html {
   width: 100%;
   height: 100%;
@@ -17,7 +30,7 @@ body {
 }
 
 .nav-bar-text {
-  color: #fff;
+  color: var(--contrast-light);
   text-decoration: none;
 }
 
@@ -28,7 +41,7 @@ body {
   width: 100%;
   min-height: 50px;
   align-items: center;
-  background-color: #0091e7;
+  background-color: var(--blue);
 }
 
 .site-name-main {
@@ -50,5 +63,5 @@ body {
 }
 
 .nav-bar-text:hover {
-  color: #fbdb2f;
+  color: var(--pink);
 }
