@@ -7,7 +7,7 @@ from django.conf import settings
 
 class Event(models.Model):
     access_link = models.UUIDField(default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     event_name = models.CharField(max_length=128)

@@ -24,7 +24,6 @@ from .forms import (
 from .models import Choice, Event, AttendeeChoice
 
 
-@login_required
 def new_event_view(request):
     template_name = "new_event.html"
     if request.method == "GET":
@@ -35,7 +34,8 @@ def new_event_view(request):
         choice_formset = ChoiceFormset(request.POST)
         if event_form.is_valid() and choice_formset.is_valid():
             event = event_form.save(commit=False)
-            event.user_id = request.user
+            if request.user.is_authenticated:
+                event.user_id = request.user
             event.save()
             for formset in choice_formset:
                 # TODO: Check if this is proper usage.
@@ -55,7 +55,7 @@ def new_event_view(request):
     )
 
 
-class NewEventSuccessView(LoginRequiredMixin, TemplateView):
+class NewEventSuccessView(TemplateView):
     template_name = "new_event_success.html"
 
     def get_context_data(self, **kwargs):
