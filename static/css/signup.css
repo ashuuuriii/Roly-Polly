@@ -62,7 +62,7 @@ input {
 }
 
 .submit-button:hover {
-  cursor: pointer;
+  background-color: var(--pink);
 }
 
 .required::after {

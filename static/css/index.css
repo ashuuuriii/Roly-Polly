@@ -1,0 +1,214 @@
+.top-banner {
+  background-color: var(--blue);
+  color: var(--contrast-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3%;
+}
+
+.welcome-message {
+  margin-right: 5%;
+}
+
+.welcome-message * {
+  margin-bottom: 2%;
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+.top-banner p {
+  font-size: 1.5rem;
+}
+
+.top-banner button {
+  background-color: var(--light-blue);
+  color: var(--blue);
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 8px;
+  width: 8%;
+  min-width: 170px;
+  height: 10%;
+}
+
+.top-banner button:hover {
+  background-color: var(--pink);
+}
+
+.features-container {
+  padding-top: 7%;
+  padding-bottom: 7%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.features-container h2 {
+  font-size: 3rem;
+  color: var(--blue);
+  font-weight: bolder;
+  margin-bottom: 1%;
+}
+
+.features-content-wrapper {
+  display: flex;
+  gap: 3%;
+}
+
+.feature-image-wrapper {
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.feature-image-wrapper img {
+  width: 200px;
+  height: 200px;
+  border: 3px solid var(--blue);
+  border-radius: 8px;
+  margin-bottom: 5%;
+}
+
+.privacy-container {
+  padding-top: 7%;
+  padding-bottom: 7%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--yellow);
+}
+
+.privacy-container h2 {
+  font-size: 3rem;
+  color: var(--blue);
+  font-weight: bolder;
+  margin-bottom: 1%;
+}
+
+.privacy-content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+}
+
+.private-image-wrapper {
+  text-align: center;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.private-image-wrapper h3 {
+  font-size: 2rem;
+  color: var(--blue);
+  margin-bottom: 2%;
+}
+
+.private-image-wrapper p {
+  text-align: left;
+  font-size: 1.3rem;
+  width: 75%;
+  
+}
+
+.private-image-wrapper img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin-bottom: 5%;
+}
+
+.signup-banner {
+  background-color: var(--red);
+  margin-top: 3%;
+  margin-bottom: 3%;
+  margin-left: 15%;
+  margin-right: 15%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2%;
+  color: var(--contrast-light);
+}
+
+.signup-banner h3 {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  margin-bottom: 1%;
+}
+
+.signup-banner p {
+  font-size: 1rem;
+}
+
+.signup-banner button {
+  border: solid 1px var(--contrast-light);
+  color: var(--contrast-light);
+  background-color: var(--red);
+  border-radius: 8px;
+  width: 8%;
+  min-width: 170px;
+  height: 15%;
+  font-size: 1rem;
+}
+
+.signup-banner button:hover {
+  background-color: var(--contrast-light);
+  color: var(--red);
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+  /* Styles */
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (min-width : 321px) {
+  /* Styles */
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) {
+  /* Styles */
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+  /* Styles */
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+  /* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+  /* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+  /* Styles */
+}

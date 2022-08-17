@@ -29,6 +29,10 @@ body {
   height: 100%;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 .nav-bar-text {
   color: var(--contrast-light);
   text-decoration: none;

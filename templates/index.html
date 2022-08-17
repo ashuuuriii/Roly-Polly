@@ -1,12 +1,63 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Roly-Polly-Home{% endblock %}
 
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Home</h1>
-{% if user.is_authenticated %}
-<a href="{% url 'create_event' %}"><button type="button">Create An Event</button></a>
-{% else %}
-<a href="{% url 'account_signup' %}"><button type="button">Sign Me Up</button></a>
-{% endif %}
+<div class="top-banner">
+  <div class="welcome-message">
+    <h1>Welcome</h1>
+    <p>Roly-Polly is an event scheduling polling app.</p>
+    <a href="{% url 'create_event' %}"><button type="button">Create An Event</button></a>   
+  </div>
+  <img src="{% static 'media/images/calendar.jpg' %}" alt="calendar">
+</div>
+<div class="features-container">
+  <h2>Features</h2>
+  <div class="features-content-wrapper">
+    <div class="feature-image-wrapper">
+      <img src="{% static 'media/images/plan_event.jpg' %}" alt="plan event">
+      <p>Create.</p>
+    </div>
+    <div class="feature-image-wrapper">
+      <img src="{% static 'media/images/send_link.jpg' %}" alt="share your vote link">
+      <p>Share.</p>
+    </div>
+    <div class="feature-image-wrapper">
+      <img src="{% static 'media/images/vote.jpg' %}" alt="vote">
+      <p>Vote.</p>
+    </div>
+    <div class="feature-image-wrapper">
+      <img src="{% static 'media/images/graph.jpg' %}" alt="view your poll data">
+      <p>View.</p>
+    </div>
+  </div>
+</div>
+<div class="privacy-container">
+  <h2>Privacy First</h2>
+  <div class="privacy-content-wrapper">
+      <div class="private-image-wrapper">
+        <img src="{% static 'media/images/private.jpg' %}" alt="remain anonymous">
+        <h3>No signup required.</h3>
+        <p>Create events anonymously. You don't need to give us your name or email.</p>
+      </div>
+      <div class="private-image-wrapper">
+        <img src="{% static 'media/images/lock.jpg' %}" alt="lock">
+        <h3>Password protection.</h3>
+        <p>Prevent others from accessing your poll with password protection.</p>
+      </div>
+  </div>
+</div>
+<div class="signup-banner">
+  <div class="banner-text-wrapper">
+    <h3>Want access to dashboard?</h3>
+    <p>Sign up to manage and edit your events by clicking that button over there!</p>
+  </div>
+  <a href="{% url 'account_signup' %}"><button type="button" class="signup-button">Sign Me Up</button></a>
+</div>
+<div> </div>
 {% endblock %}
