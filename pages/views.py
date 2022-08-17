@@ -8,7 +8,7 @@ from django.views.decorators.http import require_GET
 @require_GET
 @cache_control(max_age=60 * 60 * 24, immutable=True, public=True)  # one day
 def favicon(request):
-    file = (settings.BASE_DIR / "media/favicon" / "favicon.ico").open("rb")
+    file = (settings.BASE_DIR / "static/media/favicon" / "favicon.ico").open("rb")
     return FileResponse(file)
 
 
