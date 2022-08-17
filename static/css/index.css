@@ -115,7 +115,6 @@ h1 {
   text-align: left;
   font-size: 1.3rem;
   width: 75%;
-  
 }
 
 .private-image-wrapper img {
@@ -165,50 +164,51 @@ h1 {
   color: var(--red);
 }
 
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) {
-  /* Styles */
-}
-
 /* Smartphones (landscape) ----------- */
-@media only screen 
-and (min-width : 321px) {
-  /* Styles */
+@media only screen and (min-width: 321px) and (max-width: 1000px) {
+  .top-banner img {
+    display: none;
+  }
+
+  .features-content-wrapper {
+    flex-direction: column;
+  }
+
+  .signup-banner {
+    margin-left: 5%;
+    margin-right: 5%;
+    gap: 5%;
+  }
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen 
-and (max-width : 320px) {
-  /* Styles */
+@media only screen and (max-width: 500px) {
+  .privacy-content-wrapper {
+    flex-direction: column;
+  }
+  .private-image-wrapper {
+    width: 80%;
+  }
+
+  .private-image-wrapper p {
+    width: 100%;
+  }
+
+  .signup-banner {
+    flex-direction: column;
+    padding: 5%;
+  }
+
+  .signup-banner button {
+    height: 100%;
+    margin-top: 2%;
+  }
 }
 
-/* iPads (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) {
-  /* Styles */
-}
-
-/* iPads (landscape) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : landscape) {
-  /* Styles */
-}
-
-/* iPads (portrait) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) 
-and (orientation : portrait) {
-  /* Styles */
-}
-
-/* Desktops and laptops ----------- */
-@media only screen 
-and (min-width : 1224px) {
-  /* Styles */
+/* Tablets (portrait and landscape), smartphones landscape ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1280px) {
+  .features-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
