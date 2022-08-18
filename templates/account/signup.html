@@ -4,47 +4,45 @@
 {% block title %}Roly-Polly Signup{% endblock %}
 
 {% block static_files %}
-<link rel="stylesheet" href="{% static 'signup.css' %}">
+<link rel="stylesheet" href="{% static 'forms.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="content">
-    <div class="form-wrapper">
-      <h1 class="page-title">Create your account</h1>
-      <p class="signup-description">
-        Create an account to view and manage your events.
-        If you already have an account, <a href="{% url 'account_login' %}">login here</a>.
-      </p>
-      <form method="post" class="form-items">
-        {% csrf_token %}
-        {{ form.non_field_errors}}
-        <p>
-          <label for="{{ form.first_name.id_for_label }}">First name</label><br>
-          {{ form.first_name.errors }}
-          {{ form.first_name }}
-        </p>
-        <p>
-          <label for="{{ form.last_name.id_for_label }}">Last name</label><br>
-          {{ form.last_name.errors }}
-          {{ form.last_name }}
-        </p>            
-        <p>
-          <label for="{{ form.email.id_for_label }}" class="required">E-mail</label><br>
-          {{ form.email.errors }}
-          {{ form.email }}
-        </p>
-        <p>
-          <label for="{{ form.password1.id_for_label }}" class="required">Password</label><br>
-          {{ form.password1.errors }}
-          {{ form.password1 }}
-        </p>
-        <p>
-          <label for="{{ form.password2.id_for_label }}" class="required">Confirm password</label><br>
-          {{ form.password2.errors }}
-          {{ form.password2 }}
-        </p>
-        <p><button class="submit-button" type="submit">Create your account</button></p>
-      </form>
-  </div>
+<div class="content-wrapper">
+  <h1 class="page-title">Create your account</h1>
+  <p class="signup-description">
+    Create an account to view and manage your events.
+    If you already have an account, <a href="{% url 'account_login' %}">login here</a>.
+  </p>
+  <form method="post" class="form-items">
+    {% csrf_token %}
+    {{ form.non_field_errors}}
+    <p>
+      <label for="{{ form.first_name.id_for_label }}">First name</label><br>
+      {{ form.first_name.errors }}
+      {{ form.first_name }}
+    </p>
+    <p>
+      <label for="{{ form.last_name.id_for_label }}">Last name</label><br>
+      {{ form.last_name.errors }}
+      {{ form.last_name }}
+    </p>            
+    <p>
+      <label for="{{ form.email.id_for_label }}" class="required">E-mail</label><br>
+      {{ form.email.errors }}
+      {{ form.email }}
+    </p>
+    <p>
+      <label for="{{ form.password1.id_for_label }}" class="required">Password</label><br>
+      {{ form.password1.errors }}
+      {{ form.password1 }}
+    </p>
+    <p>
+      <label for="{{ form.password2.id_for_label }}" class="required">Confirm password</label><br>
+      {{ form.password2.errors }}
+      {{ form.password2 }}
+    </p>
+    <p><button type="submit">Create your account</button></p>
+  </form>
 </div>
 {% endblock %}

@@ -1,12 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Roly-Polly Login{% endblock %}
 
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'forms.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Log In</h1>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
+<div class="content-wrapper">
+  <h1>Login to Roly-Polly</h1>
+  <p>
+    New to Roly-Polly? <a href="{% url 'account_signup' %}">Click here to sign up.</a>
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="submit-button">Login</button>
+  </form>
+</div>
 {% endblock %}
