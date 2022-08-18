@@ -206,7 +206,7 @@ h1 {
 }
 
 /* Tablets (portrait and landscape), smartphones landscape ----------- */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1280px) {
+@media only screen and (min-device-width: 667px) and (max-device-width: 1280px) {
   .features-content-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
