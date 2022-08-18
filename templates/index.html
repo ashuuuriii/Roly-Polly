@@ -52,12 +52,14 @@
       </div>
   </div>
 </div>
-<div class="signup-banner">
-  <div class="banner-text-wrapper">
-    <h3>Want access to dashboard?</h3>
-    <p>Sign up to manage and edit your events by clicking that button over there!</p>
+{% if not user.is_authenticated %}
+  <div class="signup-banner">
+    <div class="banner-text-wrapper">
+      <h3>Want access to dashboard?</h3>
+      <p>Sign up to manage and edit your events by clicking that button over there!</p>
+    </div>
+    <a href="{% url 'account_signup' %}"><button type="button" class="signup-button">Sign Me Up</button></a>
   </div>
-  <a href="{% url 'account_signup' %}"><button type="button" class="signup-button">Sign Me Up</button></a>
-</div>
+{% endif %}
 <div> </div>
 {% endblock %}
