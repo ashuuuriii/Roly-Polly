@@ -5,7 +5,7 @@
 
 {% block static_files %}
 <link rel="stylesheet" href="{% static 'new_event.css' %}">
-
+<!-- <link rel="stylesheet" href="{% static 'forms.css' %}"> -->
 <!-- JS files for datetimepicker -->
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -15,46 +15,53 @@
 {% endblock %}
 
 {% block content %}
-<h1>Create a new event</h1>
-<form method="post">
-  {% csrf_token %}
-  {{ event_form.non_field_errors }}
-  <p>
-    {{ event_form.event_name.errors }}
-    {{ event_form.event_name.label_tag }}<br>
-    {{ event_form.event_name }}
-  </p>
-  <p>
-    {{ event_form.event_description.errors }}
-    {{ event_form.event_description.label_tag }}<br>
-    {{ event_form.event_description }}
-  </p>
-  <p>
-    {{ event_form.password_protect.errors }}
-    {{ event_form.password.errors }}
-    <label for="{{ event_form.password_protect.id_for_label }}">Protect your event with a password?<br>
-    {{ event_form.password_protect}}Yes: {{ event_form.password }}<br>
-  </p>
-  <p>
-    {{event_form.allow_add.errors }}
-    <label for="{{ event_form.allow_add.id_for_label }}">Allow your attendees to add new event times?</label><br>
-    {{ event_form.allow_add}} Yes
-  </p>
-  <div class="time_choices">
-    {{ choice_form.management_form }}
-  <label>Event Time</label><br>
-  <p>Start time - finish time(optional).</p>
-  {% for form in choice_form %}
-    <div class="event-time-row" id="row-0">
-      {{ form.time_from }}-{{ form.time_to }}
-      {{ form.DELETE }}
-      <button type="button" class="del-button" id="button-0">-</button><br>
-    </div>
-  {% endfor %}
-  <button type="button" class="add-button">+</button>
-  </div>    
-  <input type="submit" value="save" class="submit-input">
-</form>
+<div class="content-wrapper">
+  <h1>Create a new event</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ event_form.non_field_errors }}
+    <p>
+      {{ event_form.event_name.errors }}
+      {{ event_form.event_name.label_tag }}<br>
+      {{ event_form.event_name }}
+    </p>
+    <p>
+      {{ event_form.event_description.errors }}
+      {{ event_form.event_description.label_tag }}<br>
+      {{ event_form.event_description }}
+    </p>
+    <p>
+      {{ event_form.password_protect.errors }}
+      {{ event_form.password.errors }}
+      <label for="{{ event_form.password.id_for_label }}">Password (optional):</label><br>
+      {{ event_form.password }}
+    </p>
+    <p>
+      {{event_form.allow_add.errors }}
+      <p class="allow_add_label">Allow your attendees to add new choices?</p>
+      {{ event_form.allow_add}}
+      <label for="{{ event_form.allow_add.id_for_label }}">Yes</label>
+      <div class="custom-checkbox"></div>
+    </p>
+    <div class="time_choices">
+      {{ choice_form.management_form }}
+    <label>Event Time</label><br>
+    <div class="error" id="error-top"></div>
+    <p>Start time - finish time(optional).</p>
+    {% for form in choice_form %}
+      <div class="event-time-row" id="row-0">
+        {{ form.time_from }}-{{ form.time_to }}
+        {{ form.DELETE }}
+        <button type="button" class="del-button" id="button-0">-</button>
+        <div class="error" id="error-0"></div><br>
+      </div>
+    {% endfor %}
+    <button type="button" class="add-button">+</button>
+    </div>    
+    <button type="submit">Create Event</button>
+  </form>
+</div>
+
 <script>
   "use strict";
   let formCount =  {{ choice_form.total_form_count }};
@@ -65,7 +72,8 @@
       const newForm = `<div class="event-time-row" id="row-${formCount}">
                        {{ choice_form.empty_form.time_from|escapejs }}-{{ choice_form.empty_form.time_to|escapejs }}
                        {{ choice_form.empty_form.DELETE|escapejs }}
-                       <button type="button" class="del-button" id="button-${formCount}">-</button><br>
+                       <button type="button" class="del-button" id="button-${formCount}">-</button>
+                       <div class="error" id="error-${formCount}"></div><br>
                        </div>`.replace(/__prefix__/g, formCount);
       choicesBox
         .querySelector(".add-button")
@@ -113,4 +121,5 @@
     minDate: "0",
     });
 </script>
+<script type="text/javascript" src="{% static 'js/choiceValidation.js' %}"></script>
 {% endblock %}
