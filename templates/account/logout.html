@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Roly-Polly Logout{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'confirmation.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Are you sure you want to logout?</h1>
+
+<form method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <button type="submit" class="confirm">Yes</button><br>
+  <a href="{% url 'dashboard' %}"><button type="button" class="cancel">Go back</button></a>
+</form>
+
+{% endblock %}
