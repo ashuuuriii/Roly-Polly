@@ -1,14 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Delete{% endblock %}
 
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'confirmation.css' %}">
+{% endblock %}
+
 {% block content %}
-<p>Are you sure you want to delete {{ object.event_name }}?</p>
+<h1>Are you sure you want to delete {{ object.event_name }}?</h1>
 <form method="post">
   {% csrf_token %}
+  <button type="submit" class="confirm">Confirm</button><br>
   <a href="{% url 'event' uuid_slug=object.access_link %}">
-    <button type="button" >Go back</button>
+    <button type="button" class="cancel" >Go back</button>
   </a>
-  <button type="submit">Confirm</button>
 </form>
 {% endblock %}
