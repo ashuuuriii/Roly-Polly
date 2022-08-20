@@ -1,12 +1,17 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}My Dashboard{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'new_event.css' %}">
+{% endblock %}
 
 {% block content %}
 <h1>Edit Event</h1>
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" value="Save">
+  <button type="submit">Save</button>
 </form>
 {% endblock %}
