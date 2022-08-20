@@ -1,0 +1,99 @@
+h1 {
+  color: var(--blue);
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 3%;
+  margin-bottom: 1%;
+  margin-right: 3%;
+  margin-left: 3%;
+}
+
+.modal-container {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: var(--contrast-dark-alpha);
+}
+
+.form-container {
+  background-color: var(--contrast-light);
+  margin: 10% auto;
+  padding: 20px;
+  width: 40%;
+}
+
+.modal-close {
+  float: right;
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--contrast-dark-alpha);
+}
+
+.modal-close:hover {
+  color: var(--contrast-dark);
+}
+
+form p,
+label {
+  font-size: 1rem;
+  margin-top: 3%;
+  font-weight: bolder;
+  color: var(--contrast-dark);
+}
+
+.choices-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+input:not([type="checkbox"]),
+select {
+  box-sizing: border-box;
+  width: 50%;
+  min-height: 40px;
+  line-height: calc(11px + 1.5vw);
+  margin-bottom: 3%;
+  margin-top: 1%;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: var(--contrast-dark);
+}
+
+form button[type="submit"] {
+  width: 30%;
+  height: 10%;
+  min-height: 40px;
+  height: calc(10px + 1.5vw);
+  border-radius: 5px;
+  border-style: none;
+  background-color: var(--blue);
+  color: var(--contrast-light);
+  font-size: 1rem;
+  display: grid;
+  margin: 3% auto;
+  align-items: center;
+}
+
+form button[type="submit"]:hover {
+  background-color: var(--pink);
+}
+
+/* smartphones portrait */
+@media only screen and (max-width: 500px) {
+  .form-container {
+    width: 95%;
+  }
+}
+
+/* Tablets (portrait and landscape), smartphones landscape ----------- */
+@media only screen and (min-device-width: 667px) and (max-device-width: 1280px) {
+  .form-container {
+    width: 80%;
+  }
+}

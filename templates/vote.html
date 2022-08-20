@@ -1,27 +1,41 @@
 {% extends "base.html" %}
 {% load template_zip %}
+{% load static %}
 
 {% block title %}Vote{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'vote.css' %}">
+{% endblock %}
 
 {% block content %}
 <h1>{{ object.event_name }}</h1>
 <p>{{ object.event_description }}</p>
+<button type="button" class="modal-open">Vote</button>
 {% if object.allow_add %}
-  <a href="{% url 'add' uuid_slug=object.access_link %}"><button type="button" class="add-vote">+</button></a>
+  <a href="{% url 'add' uuid_slug=object.access_link %}"><button type="button" class="add-vote">Add Choices</button></a>
 {% endif %}
-<form method="post">
-  {% csrf_token %}
-  {{ attendee_form.as_p }}
-  {{ vote_form.management_form }}
-  {% for form, choice in vote_form|zip:choices %}
-    <p>
-      <input type="hidden" name="choice-id" value="{{ choice.pk }}" />
-      {{ choice.time_from}}-{{ choice.time_from}}
-      {{ form.status }}<br>
-      {{ form.status.errors}}
-    </p>
-  {% endfor %}      
-  <input type="hidden" name="event-uuid" value="{{ event.access_link }}"/>
-  <button type="submit">Vote</button>
-</form>
+<div class="modal-container">
+  <div class="form-container">
+    <span class="modal-close">&times;</span>
+    <form method="post">
+      {% csrf_token %}
+      {{ attendee_form.as_p }}
+      {{ vote_form.management_form }}
+      <div class="choices-box">
+        {% for form, choice in vote_form|zip:choices %}
+          <p>
+            <input type="hidden" name="choice-id" value="{{ choice.pk }}" />
+            {{ choice.time_from}}-{{ choice.time_from}}
+          </p>
+            {{ form.status }}
+            {{ form.status.errors}}
+        {% endfor %} 
+      </div>
+      <input type="hidden" name="event-uuid" value="{{ event.access_link }}"/>
+      <button type="submit">Vote</button>
+    </div>
+  </form>  
+</div>
+<script type="text/javascript" src="{% static 'js/modalForm.js' %}"></script>
 {% endblock %}
