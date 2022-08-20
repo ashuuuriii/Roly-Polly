@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Success!{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'info_pages.css' %}" type="text/css" />
+{% endblock %}
 
 {% block content %}
 <h1>Success!</h1>
 <p>Your event has been created. Share the link below with your guests for them to vote or edit your event in your dashboard.</p>
-<div class="vote-link-holder">
-  {{ request.get_host }}{{ event_view_link }}
-</div>
+<a href="{{ event_view_link }}"><p>{{ request.get_host }}{{ event_view_link }}</p></a>
 {% endblock %}

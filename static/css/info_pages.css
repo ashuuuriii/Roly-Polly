@@ -37,3 +37,7 @@ img[class="horizontal-fullwidth"] {
   margin: auto;
   padding: 3%;
 }
+
+a > p{
+  color: var(--blue);
+}
