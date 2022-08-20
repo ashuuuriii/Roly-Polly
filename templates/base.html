@@ -12,7 +12,7 @@
     {% block static_files %}{% endblock %}
   </head>
   <body>
-		<div class="nav-bar">
+		<nav>
       <div class="site-name-main"><a href="{% url 'home' %}" class="nav-bar-text">Roly-Polly</a></div>
       <ul class="nav-bar-links">
         <li><a href="{% url 'home' %}" class="nav-bar-text">Home</a></li>
@@ -25,7 +25,7 @@
           <li><a href="{% url 'account_login' %}" class="nav-bar-text">Log In</a></li>
         {% endif %}
       </ul>
-    </div>
+    </nav>
 		{% block content %}{% endblock content%}
   </body>
 </html>

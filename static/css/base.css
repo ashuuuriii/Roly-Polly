@@ -41,7 +41,7 @@ button:hover {
   text-decoration: none;
 }
 
-.nav-bar {
+nav {
   display: grid;
   grid-template-columns: 30% 70%;
   height: 5%;
