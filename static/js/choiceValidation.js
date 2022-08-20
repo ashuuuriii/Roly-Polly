@@ -32,7 +32,7 @@ function checkChoicesExist(e, choices) {
   if (nValidChoices < 1) {
     e.preventDefault();
     errorBox.textContent =
-      "You cannot create a new event without any event times.";
+      "You must include at least one event time.";
     return false;
   } else {
     errorBox.textContent = "";
