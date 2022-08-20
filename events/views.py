@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
 from django.views.generic import (
     TemplateView,
     FormView,
@@ -34,6 +33,8 @@ def new_event_view(request):
         choice_formset = ChoiceFormset(request.POST)
         if event_form.is_valid() and choice_formset.is_valid():
             event = event_form.save(commit=False)
+            if event_form.data.get('password'):
+                event.password_protect = True
             if request.user.is_authenticated:
                 event.user_id = request.user
             event.save()
