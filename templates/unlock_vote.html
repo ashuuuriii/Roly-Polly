@@ -1,14 +1,21 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Unlock to Vote{% endblock %}
 
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'forms.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>This event is private!</h1>
-<p>Please enter the password shared by your host below to unlock.</p>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p}}
-  <input type="hidden" name="event_id" value="{{ uuid_slug }}">
-  <button type="submit">Unlock</button>
-</form>
+<div class="content-wrapper">
+  <h1>This event is private!</h1>
+  <p>Please enter the password shared by your host below to unlock.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <input type="hidden" name="event_id" value="{{ uuid_slug }}">
+    <button type="submit">Unlock</button>
+  </form>
+</div>
 {% endblock %}
