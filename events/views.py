@@ -234,7 +234,10 @@ class ChoiceAddView(UserPassesTestMixin, TemplateView):
             choice = formset.save(commit=False)
             choice.event_id = event
             choice.save()
-        return redirect("vote", uuid_slug=event.access_link)
+        if request.user.is_authenticated:
+            return redirect("event", uuid_slug=self.kwargs.get("uuid_slug"))
+        else:
+            return redirect("vote", uuid_slug=event.access_link)
 
     def form_invalid(self, request, choice_formset):
         return self.render_to_response(
