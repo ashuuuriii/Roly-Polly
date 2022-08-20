@@ -201,7 +201,7 @@ class ChoiceAddView(UserPassesTestMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         access_link = uuid_slug if uuid_slug else context.get("uuid_slug")
         context["event"] = Event.objects.get(access_link=access_link)
-        context["choices_list"] = Choice.objects.filter(event_id=context["event"])
+        context["choices_list"] = Choice.objects.filter(event_id=context["event"]).order_by('time_from')
         context["forms"] = (
             form if form else self.form_class(queryset=Choice.objects.none())
         )
