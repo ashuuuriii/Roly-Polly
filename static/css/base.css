@@ -1,19 +1,19 @@
 @font-face {
   font-family: SeaSideResort;
-  src: url('fonts/SEASRN__-webfont.woff') format('woff');
+  src: url("fonts/SEASRN__-webfont.woff") format("woff");
 }
 
 /* set colour scheme variables */
 :root {
   --contrast-light: white;
-  --contrast-light-alpha: rgba(255, 255, 255, 0.150);
+  --contrast-light-alpha: rgba(255, 255, 255, 0.15);
   --contrast-dark: rgb(0, 0, 0);
   --contrast-dark-alpha: rgba(0, 0, 0, 0.15);
-  --red: #FF1D58;
-  --pink: #F75990;
-  --yellow: #FFF685;
-  --light-blue: #00DDFF;
-  --blue: #0049B7;
+  --red: #ff1d58;
+  --pink: #f75990;
+  --yellow: #fff685;
+  --light-blue: #00ddff;
+  --blue: #0049b7;
 }
 
 html {
@@ -22,12 +22,15 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   width: 100%;
   height: 100%;
 }
@@ -42,8 +45,11 @@ button:hover {
 }
 
 nav {
-  display: grid;
-  grid-template-columns: 30% 70%;
+  /* display: grid;
+  grid-template-columns: 97% 3%; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 5%;
   width: 100%;
   min-height: 50px;
@@ -53,22 +59,63 @@ nav {
 
 .site-name-main {
   font-family: SeaSideResort;
-  font-size:calc(11px + 1.5vw);
+  font-size: calc(11px + 1.5vw);
   margin-left: 3%;
   margin-right: 3%;
 }
 
-.nav-bar-links {
-  text-align: right;
-  white-space: nowrap;
+.dropbtn {
+  background: none;
+  border: none;
+  color: var(--contrast-light);
+  font-size: 3rem;
 }
 
-.nav-bar-links > li {
-  display: inline-block;
-  margin-left: 3%;
-  margin-right: 3%;
-}
-
-.nav-bar-text:hover {
+.dropbtn:hover,
+.dropbtn:focus {
   color: var(--pink);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: none;
+  min-width: 160px;
+  right: 0%;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: var(--blue);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--yellow);
+}
+
+.show {
+  display: block;
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width: 667px) {
+  .dropdown-content {
+    width: 100vw;
+    background-color: var(--yellow);
+  }
+}
+/* Tablets (portrait and landscape), smartphones landscape ----------- */
+@media only screen and (min-device-width: 667px) and (max-device-width: 1280px) {
+  .dropdown-content {
+    width: 100vw;
+    background-color: var(--yellow);
+  }
 }

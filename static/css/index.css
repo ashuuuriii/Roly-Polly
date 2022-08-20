@@ -164,6 +164,10 @@ h1 {
   color: var(--red);
 }
 
+.dropdown-content a {
+  color: var(--red);
+}
+
 /* Smartphones (landscape) ----------- */
 @media only screen and (min-width: 321px) and (max-width: 1000px) {
   .top-banner img {
@@ -179,10 +183,13 @@ h1 {
     margin-right: 5%;
     gap: 5%;
   }
+  .dropdown-content a {
+    color: var(--blue);
+  }
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 667px) {
   .privacy-content-wrapper {
     flex-direction: column;
   }
@@ -202,6 +209,9 @@ h1 {
   .signup-banner button {
     height: 100%;
     margin-top: 2%;
+  }
+  .dropdown-content a {
+    color: var(--blue);
   }
 }
 
