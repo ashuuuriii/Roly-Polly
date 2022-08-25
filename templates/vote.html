@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load template_zip %}
+{% load get_index %}
 {% load static %}
 
 {% block title %}Vote{% endblock %}
@@ -11,10 +12,42 @@
 {% block content %}
 <h1>{{ object.event_name }}</h1>
 <p>{{ object.event_description }}</p>
-<button type="button" class="modal-open">Vote</button>
-{% if object.allow_add %}
-  <a href="{% url 'add' uuid_slug=object.access_link %}"><button type="button" class="add-vote">Add Choices</button></a>
-{% endif %}
+<div class="button-container">
+  <button type="button" class="modal-open">Vote</button>
+  {% if object.allow_add %}
+    <a href="{% url 'add' uuid_slug=object.access_link %}"><button type="button" class="add-vote">Add Choices</button></a>
+  {% endif %}
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <td></td>
+        <th scope="col" class="totals">Yes</th>
+        <th scope="col" class="totals">Maybe</th>
+        <th scope="col" class="totals">No</th>
+        {% for name in names %}
+          <th scope="col" class="names">{{name.name}}</th>
+        {% endfor %}
+      </tr>    
+    </thead>
+    <tbody>
+      {% for choice in choices %}
+      <tr>
+        <td class="choice">{{ choice.time_from }}-{{ choice.time_to }}</td>
+        {% for total_vote in total_votes|get_index:forloop.counter0 %}
+          <td class="totals">{{ total_vote }}</td>
+        {% endfor %}
+        {% for user_vote in user_votes|get_index:forloop.counter0 %}
+          <td class="names {{user_vote}}">{{ user_vote }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 <div class="modal-container">
   <div class="form-container">
     <span class="modal-close">&times;</span>

@@ -8,6 +8,59 @@ h1 {
   margin-left: 3%;
 }
 
+p {
+  margin: 0 3%;
+  font-size: 1.2rem;
+}
+
+/* Vote result table styling */
+.table-container {
+  overflow: auto;
+}
+
+table {
+  margin: 0 3%;
+  border-collapse: collapse;
+
+  letter-spacing: 1px;
+  font-size: 1rem;
+}
+
+th {
+  font-weight: bold;
+}
+
+th,
+td {
+  padding: 10px 20px;
+}
+
+.totals,
+.names,
+.choice {
+  border: 1px solid rgb(200, 200, 200);
+}
+
+.choice {
+  font-weight: bold;
+  min-width: 250px;
+}
+
+.Yes {
+  color: var(--blue);
+}
+
+.Maybe {
+  color: var(--light-blue);
+}
+
+.No {
+  color: var(--red);
+}
+.\- {
+  color: var(--yellow);
+}
+/* Modal form styling */
 .modal-container {
   display: none;
   position: fixed;
@@ -25,6 +78,35 @@ h1 {
   margin: 10% auto;
   padding: 20px;
   width: 40%;
+}
+
+.button-container {
+  margin: 1% 3%;
+}
+
+.modal-open,
+.add-vote {
+  color: var(--contrast-light);
+  font-size: 1rem;
+  width: 4%;
+  min-width: 100px;
+  height: 10%;
+  border: none;
+  border-radius: 8px;
+}
+
+.add-vote{
+  background-color: var(--red);
+}
+
+.modal-open {
+  background-color: var(--blue);
+  margin-right: 1%;
+}
+
+.modal-open:hover,
+.add-vote:hover {
+  background-color: var(--pink);
 }
 
 .modal-close {
@@ -86,6 +168,10 @@ form button[type="submit"]:hover {
 
 /* smartphones portrait */
 @media only screen and (max-width: 500px) {
+  .names {
+    display: none;
+  }
+
   .form-container {
     width: 95%;
   }
