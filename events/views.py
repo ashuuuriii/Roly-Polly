@@ -11,6 +11,7 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms import modelformset_factory
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 
 from .forms import (
     NewEventForm,
@@ -20,7 +21,7 @@ from .forms import (
     ChoiceVoteForm,
     ChoiceVoteBaseFormset,
 )
-from .models import Choice, Event, AttendeeChoice
+from .models import Choice, Event, AttendeeChoice, Attendee
 
 
 def new_event_view(request):
@@ -33,7 +34,7 @@ def new_event_view(request):
         choice_formset = ChoiceFormset(request.POST)
         if event_form.is_valid() and choice_formset.is_valid():
             event = event_form.save(commit=False)
-            if event_form.data.get('password'):
+            if event_form.data.get("password"):
                 event.password_protect = True
             if request.user.is_authenticated:
                 event.user_id = request.user
@@ -81,9 +82,57 @@ class EventVoteView(UserPassesTestMixin, DetailView):
         context = self.get_context_data(object=self.object, **kwargs)
         return self.render_to_response(context)
 
+    def get_user_vote_status(self, choices):
+        # user_vote_status is a matrix where m is a choice and n is a user's vote.
+        user_vote_status = []
+        attendee_choices = AttendeeChoice.objects.filter(choice_id__in=choices)
+
+        for choice in choices:
+            choice_status = []
+            choice_responses = attendee_choices.filter(choice_id=choice).order_by(
+                "attendee_id"
+            )
+            for response in choice_responses:
+                if response.status:
+                    choice_status.append(response.get_status_display())
+                else:
+                    # replace None with "-" for frontend display
+                    choice_status.append("-")
+            user_vote_status.append(choice_status)
+
+        return user_vote_status
+
+    def get_total_votes(self, choices):
+        # total_votes is a matrix where m is a choice and n is a status
+        total_votes = []
+        attendee_choices = AttendeeChoice.objects.filter(choice_id__in=choices)
+        summed_choices = (
+            attendee_choices.values("status")
+            .order_by("choice_id")
+            .annotate(count=Count("status"))
+        )
+
+        for choice in choices:
+            choice_total = summed_choices.filter(choice_id=choice)
+            print(choice_total)
+            totals = [0, 0, 0]  # yes, maybe, no
+            for status_count in choice_total:
+                # Count() does not return a dict if count is zero.
+                # This loop ensures that a status with no votes is also returned.
+                if status_count["status"]:
+                    totals[status_count["status"] - 1] = status_count["count"]
+            total_votes.append(totals)
+
+        return total_votes
+
     def get_context_data(self, attendee_form=None, vote_form=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["choices"] = Choice.objects.filter(event_id=context["object"].pk)
+        context["choices"] = Choice.objects.filter(
+            event_id=context["object"].pk
+        ).order_by("time_from")
+        context["names"] = Attendee.objects.filter(event_id=context["object"].pk)
+        context["user_votes"] = self.get_user_vote_status(context["choices"])
+        context["total_votes"] = self.get_total_votes(context["choices"])
         context["attendee_form"] = (
             self.attendee_form_class() if not attendee_form else attendee_form
         )
@@ -201,7 +250,9 @@ class ChoiceAddView(UserPassesTestMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         access_link = uuid_slug if uuid_slug else context.get("uuid_slug")
         context["event"] = Event.objects.get(access_link=access_link)
-        context["choices_list"] = Choice.objects.filter(event_id=context["event"]).order_by('time_from')
+        context["choices_list"] = Choice.objects.filter(
+            event_id=context["event"]
+        ).order_by("time_from")
         context["forms"] = (
             form if form else self.form_class(queryset=Choice.objects.none())
         )
@@ -327,7 +378,7 @@ class EventEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = NewEventForm
     slug_url_kwarg = "uuid_slug"
     slug_field = "access_link"
-    success_url = "/"
+    success_url = reverse_lazy("dashboard")
 
     def test_func(self):
         obj = self.get_object()
