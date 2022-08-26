@@ -1,6 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Delete Options{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'events_choice_base.css' %}" />
+<link rel="stylesheet" href="{% static 'vote_del.css' %}" />
+{% endblock %}
 
 {% block content %}
 <h1>Delete Choice Options</h1>
@@ -19,6 +25,18 @@
   </li>
   {% endfor %}
   </ul>
-  <input type="submit" value="Delete">
+  <button type="button" class="open-window">Delete</button>
+
+  <div class="confirm-window-container">
+    <div class="confirm-content-container">
+      <span class="close-window">&times;</span>
+      <p>You will lose all current votes on deleted choices. Are you sure you
+        want to delete the selected choices?</p>
+      <button type="submit">Yes</button>
+      <button type="button" class="close-window">No</button>          
+    </div>
+  </div>
 </form>
+
+<script type="text/javascript" src="{% static 'js/confirmationWindow.js' %}"></script>
 {% endblock %}
