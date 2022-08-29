@@ -114,7 +114,6 @@ class EventVoteView(UserPassesTestMixin, DetailView):
 
         for choice in choices:
             choice_total = summed_choices.filter(choice_id=choice)
-            print(choice_total)
             totals = [0, 0, 0]  # yes, maybe, no
             for status_count in choice_total:
                 # Count() does not return a dict if count is zero.
@@ -336,7 +335,11 @@ class DashboardView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(user_id=self.request.user).order_by("-date_modified").annotate(voters=Count("attendee"))
+        return (
+            queryset.filter(user_id=self.request.user)
+            .order_by("-date_modified")
+            .annotate(voters=Count("attendee"))
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -350,9 +353,28 @@ class EventDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     slug_url_kwarg = "uuid_slug"
     slug_field = "access_link"
 
+    def get_results(self, choices):
+        labels = []
+        data = []
+
+        for choice in choices:
+            time_from = choice.time_from.strftime("%m/%d/%Y,%l:%M%p")
+            time_to = (
+                choice.time_to.strftime("%m/%d/%Y,%l:%M%p") if choice.time_to else ""
+            )
+            labels.append(f"{time_from}-{time_to}")
+            data.append(
+                AttendeeChoice.objects.filter(choice_id=choice, status=1).count()
+            )
+
+        return labels, data
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["choices"] = Choice.objects.filter(event_id=context.get("event"))
+        context["choices"] = Choice.objects.filter(
+            event_id=context.get("event")
+        ).order_by("time_from")
+        context["label"], context["datas"] = self.get_results(context["choices"])
         return context
 
     def test_func(self):

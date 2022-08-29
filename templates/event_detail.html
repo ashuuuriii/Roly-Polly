@@ -1,36 +1,102 @@
 {% extends "base.html" %}
+{% load template_zip %}
+{% load static %}
 
 {% block title %}{{ event.event_name }}{% endblock %}
 
-{% block content %}
-<a href="{% url 'edit' uuid_slug=event.access_link %}">
-  <button type="button">Edit</button>
-</a>
-<a href="{% url 'delete' uuid_slug=event.access_link %}">
-  <button type="button">Delete</button>
-</a>
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'tabs.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'graph-responsive.css' %}" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
 
-<div class="details-container">
+{% block content %}
+<div class="content-wrapper">
   <h1>{{ event.event_name }}</h1>
-  <h2>Choices</h2>
-  <a href="{% url 'add' uuid_slug=event.access_link %}">
-    <button type="button">Add</button>
-  </a>
-  <a href="{% url 'delete_choice' uuid_slug=event.access_link %}">
-    <button type="button">Delete</button>
-  </a>  
-  <ul>
-    {% for choice in choices %}
-    <li>
-      {{ choice.time_from }}
-      {% if choice.time_to %}
-        -{{ choice.time_to }}
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
+  <div class="tabs">
+    <button class="tablinks active" data-key="event">Event Details</button>
+    <button class="tablinks" data-key="choices">Choices</button>
+    <button class="tablinks" data-key="results">Results</button>
+  </div>
+
+  <div class="tab-content" id="event">
+    <a href="{% url 'edit' uuid_slug=event.access_link %}">
+      <button type="button">Edit</button>
+    </a>
+    <a href="{% url 'delete' uuid_slug=event.access_link %}">
+      <button type="button">Delete</button>
+    </a><br>
+    <h3>Date created: </h3>
+    <p>{{ event.date_created }}</p><br>
+    <h3>Last modified: </h3>
+    <p>{{ event.date_modified }}</p><br>
+    <h3>Password protected? </h3>
+    <p>{{ event.password_protect|yesno }}</p><br>
+    <h3>Description: </h3><br>
+    <p>{{ event.event_description }}</p>
+
+  </div>
+
+  <div class="tab-content" id="choices">
+    <h2>Choices</h2>
+    <a href="{% url 'add' uuid_slug=event.access_link %}">
+      <button type="button">Add</button>
+    </a>
+    <a href="{% url 'delete_choice' uuid_slug=event.access_link %}">
+      <button type="button">Delete</button>
+    </a>  
+    <ul>
+      {% for choice in choices %}
+      <li>
+        {{ choice.time_from }}
+        {% if choice.time_to %}
+          - {{ choice.time_to }}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="tab-content" id="results">
+    <h2>Results</h2>
+    <div class="graph-display">
+      <canvas id="results-chart"></canvas>
+    </div>
+    <div class="text-display">
+      <p>Can Attend</p><br>
+      {% for labels, data in label|zip:datas %}
+      <h3>{{ labels }}: </h3>
+      <p>{{ data }}</p><br>
+      {% endfor %}
+    </div>
+  </div>
 </div>
-<div class="results-container">
-  <h1>Results</h1>
-</div>
+
+<script type="text/javascript">
+  const labels = {{ label|safe }};
+  const data = {
+    labels: labels,
+    datasets: [{
+      data: {{ datas|safe }},
+      label: 'Can attend',
+      fill: false,
+      backgroundColor: ['#00ddff56'],
+      borderColor: ['#00ddff'],
+      borderWidth: 1,
+    }]
+  };
+  const config = {
+    type: 'bar',
+    data,
+    options: {
+      indexAxis: 'y',
+    }
+  };
+  const chart = new Chart(
+    document.getElementById('results-chart'),
+    config
+  )
+</script>
+<script type="text/javascript" src="{% static 'js/graph.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/tabs.js' %}"></script>
 {% endblock %}

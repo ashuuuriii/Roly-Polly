@@ -1,0 +1,18 @@
+.graph-display {
+  display: block;
+}
+
+.text-display {
+  display: none;
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width: 667px) {
+  .text-display {
+    display: block;
+  }
+
+  .graph-display {
+    display: none;
+  }
+}
