@@ -1,7 +1,6 @@
 amqp==5.1.1
 asgiref==3.5.2
 async-timeout==4.0.2
-backports.zoneinfo==0.2.1;python_version<"3.9"
 billiard==3.6.4.0
 black==22.6.0
 celery==5.2.7
@@ -48,4 +47,5 @@ typing_extensions==4.3.0
 urllib3==1.26.9
 vine==5.0.0
 wcwidth==0.2.5
+whitenoise==6.2.0
 wrapt==1.14.1
