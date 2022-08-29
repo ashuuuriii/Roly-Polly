@@ -14,7 +14,7 @@ class Event(models.Model):
     event_description = models.TextField(max_length=512, default="", blank=True)
     allow_add = models.BooleanField(default=False)
     password_protect = models.BooleanField(default=False)
-    password = models.CharField(max_length=32, default="", blank=True)
+    password = models.CharField(max_length=255, default="", blank=True)
 
     def __str__(self):
         return self.event_name
