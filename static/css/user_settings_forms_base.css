@@ -1,0 +1,74 @@
+h1 {
+  color: var(--blue);
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 3%;
+  margin-bottom: 1%;
+  margin-right: 3%;
+  margin-left: 3%;
+}
+
+h2 {
+  font-weight: bold;
+}
+
+p:not(form p),
+h2 {
+  margin: 1% 3%;
+  font-size: 1.2rem;
+}
+
+form {
+  margin: 0 3%;
+  width: 35%;
+}
+
+.allow_add_label,
+label {
+  font-size: 1rem;
+  font-weight: bolder;
+}
+
+input:not([type="checkbox"]) {
+  min-height: 40px;
+  line-height: calc(11px + 1.5vw);
+  border-style: solid;
+  border-radius: 5px;
+  border-color: var(--contrast-dark);
+  margin-bottom: 2%;
+}
+
+button[type="submit"] {
+  width: 30%;
+  height: 10%;
+  min-height: 40px;
+  height: calc(10px + 1.5vw);
+  border-radius: 5px;
+  border-style: none;
+  background-color: var(--blue);
+  color: var(--contrast-light);
+  font-size: 1rem;
+  margin: 3% 0;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--pink);
+}
+
+.error {
+  color: var(--red);
+}
+
+/* smartphones portrait */
+@media only screen and (max-width: 500px) {
+  form {
+    width: 95%;
+  }
+}
+
+/* Tablets (portrait and landscape), smartphones landscape ----------- */
+@media only screen and (min-device-width: 667px) and (max-device-width: 1280px) {
+  form {
+    width: 80%;
+  }
+}
