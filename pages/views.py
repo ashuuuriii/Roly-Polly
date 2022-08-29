@@ -31,4 +31,4 @@ def handler_403(request, exception):
     return render(request, 'error_pages/403.html', status=403)
 
 def handler_500(request):
-    return render(request, 'error_pages/5--.html', status=500)
+    return render(request, 'error_pages/500.html', status=500)
