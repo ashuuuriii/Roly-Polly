@@ -15,7 +15,7 @@
     <h1>Welcome back!</h1>
   {% endif %}
   <div class="buttons-container">
-    <a href="/"><button type="button" class="top-button">User Settings</button></a>
+    <a href="{% url 'user_settings' %}"><button type="button" class="top-button">User Settings</button></a>
     <a href="{% url 'create_event' %}"><button type="button" class="top-button">New Event</button></a>      
   </div>
 </div>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Settings{% endblock %}
+
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'user_settings.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<h1>User Settings</h1>
+<a href="{% url 'account_email' %}">Update Email</a><br>
+<a href="{% url 'account_change_password' %}">Change Password</a>
+{% endblock %}
