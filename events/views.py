@@ -336,7 +336,7 @@ class DashboardView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(user_id=self.request.user)
+        return queryset.filter(user_id=self.request.user).order_by("-date_modified").annotate(voters=Count("attendee"))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

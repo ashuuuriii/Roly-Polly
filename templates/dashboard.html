@@ -1,17 +1,37 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}My Dashboard{% endblock %}
 
+{% block static_files %}
+<link rel="stylesheet" href="{% static 'dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
-{% if name %}
-  <span>Welcome back,</span>
-  <h1>{{ name }}!</h1>
-{% else %}
-  <h1>Welcome back!</h1>
-{% endif %}
-<ul>
+<div class="header-container">
+  {% if name %}
+    <h1>Welcome back, {{ name }}!</h1>
+  {% else %}
+    <h1>Welcome back!</h1>
+  {% endif %}
+  <div class="buttons-container">
+    <a href="/"><button type="button" class="top-button">User Settings</button></a>
+    <a href="{% url 'create_event' %}"><button type="button" class="top-button">New Event</button></a>      
+  </div>
+</div>
+<h2>Your Events</h2>
+<div class="event-cards-holder">
   {% for event in object_list %}
-    <li><a href="{% url 'event' uuid_slug=event.access_link %}">{{ event.event_name }}</a></li>
+    <div class="event-card">
+      <a href="{% url 'event' uuid_slug=event.access_link %}">{{ event.event_name }}</a><br>
+      <h3>Last modified: </h3>
+      <p>{{ event.date_modified }}</p><br>
+      <h3>Total Voters: </h3>
+      <p>{{ event.voters }}</p><br>
+      <h3>Description: </h3><br>
+      <p>{{ event.event_description|truncatechars_html:50 }}</p>
+    </div>
   {% endfor %}
-</ul>
+</div>
+<a href="{% url 'create_event' %}"><button type="button" class="plus">+</button></a>
 {% endblock %}

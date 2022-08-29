@@ -1,0 +1,112 @@
+.header-container {
+  margin: 3%;
+  display: grid;
+  grid-template-columns: 80% 20%;
+  align-items: center;
+}
+
+.buttons-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+h1 {
+  color: var(--blue);
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.top-button {
+  background-color: var(--light-blue);
+  color: var(--blue);
+  font-size: 1rem;
+  width: 75%;
+  min-width: 150px;
+  height: 3rem;;
+  border: none;
+  border-radius: 8px;
+}
+
+a button:hover {
+  background-color: var(--pink);
+}
+
+h2 {
+  margin: 0 3%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--contrast-dark);
+}
+
+.event-cards-holder {
+  margin-left: 3%;
+  margin-right: 12%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1%;
+}
+
+.event-card {
+  background-color: var(--yellow);
+  height: 400px;
+  padding: 3%;
+}
+
+.event-card a {
+  color: var(--blue);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.event-card h3,
+.event-card p {
+  display: inline;
+  font-size: 1.5rem;
+}
+
+.event-card h3 {
+  font-weight: bold;
+}
+
+.plus {
+  border: none;
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  background-color: var(--blue);
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  font-size: 2rem;
+  color: var(--contrast-light);
+}
+
+.plus:hover {
+  rotate: 360deg;
+  background-color: var(--blue);
+  transition: 1000ms;
+}
+
+/* smartphones portrait */
+@media only screen and (max-width: 500px) {
+  .header-container {
+    grid-template-columns: 1fr;
+  }
+
+  .event-cards-holder{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablets (portrait and landscape), smartphones landscape ----------- */
+@media only screen and (min-device-width: 667px) and (max-device-width: 1280px) {
+  .header-container {
+    grid-template-columns: 1fr;
+  }
+
+  .event-cards-holder{
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
