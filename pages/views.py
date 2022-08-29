@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import FileResponse
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
+from django.shortcuts import render
 
 
 @require_GET
@@ -22,3 +23,12 @@ class AboutView(TemplateView):
 
 class FaqView(TemplateView):
     template_name = "faq.html"
+
+def handler_404(request, exception):
+    return render(request, 'error_pages/404.html', status=404)
+
+def handler_403(request, exception):
+    return render(request, 'error_pages/403.html', status=403)
+
+def handler_500(request):
+    return render(request, 'error_pages/5--.html', status=500)
