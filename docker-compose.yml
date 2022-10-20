@@ -1,0 +1,70 @@
+version: "3.7"
+services:
+  web:
+    restart: always
+    build: .
+    ports:
+      - "8000:8000"
+    command: gunicorn --bind 0.0.0.0:8000 RolyPolly.wsgi --workers=4
+    # command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+    env_file: ./.env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - net
+
+  db:
+    image: postgres:12
+    env_file: ./.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - net
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  nginx:
+    build: nginx
+    restart: always
+    volumes:
+      - static_volume:/app/static
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - net
+
+  redis:
+    image: redis:7.0.5-bullseye
+    command: redis-server
+    ports:
+      - "6379:6379"
+    networks:
+      - net
+
+  celery:
+    restart: always
+    build: .
+    command: celery -A  RolyPolly worker -l info
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - web
+    networks:
+      - net
+
+networks:
+  net:
+    name: net
+
+volumes:
+  postgres_data:
+  static_volume:
