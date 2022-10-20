@@ -1,5 +1,5 @@
 # Event Scheduling App (Roly-Polly)
-[Live Demo](https://rolypolly.fly.de)
+[Live Demo](https://rolypolly.fly.dev)
 
 ## Table of Contents
 
